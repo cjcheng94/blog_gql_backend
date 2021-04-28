@@ -2,50 +2,23 @@ import { ApolloServer, gql } from "apollo-server";
 import { makeExecutableSchema } from "graphql-tools";
 import { default as mongodb } from "mongodb";
 import dotenv from "dotenv";
+
 dotenv.config();
+const { MongoClient } = mongodb;
 
-const MongoClient = mongodb.MongoClient;
+import * as posts from "./posts/index.js";
+import * as users from "./users/index.js";
 
-const typeDefs = gql`
-  type Query {
-    posts: [Post]
-    users: [User]!
-  }
-  type Post {
-    _id: ID!
-    title: String!
-    author: String!
-    content: String!
-    date: String!
-  }
-  type User {
-    _id: ID!
-    posts: [ID!]
-    username: String!
-    password: String
-  }
+const typeDef = gql`
+  type Query
 `;
 
-const resolvers = {
-  Query: {
-    async posts(_parent, _args, _context, _info) {
-      const data = await _context.db.collection("posts").find().toArray();
-      return data;
-    },
-    users(_parent, _args, _context, _info) {
-      const data = _context.db.collection("users").find().toArray();
-      return data;
-    }
-  }
-};
-
 const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers
+  typeDefs: [typeDef, posts.typeDefs, users.typeDefs],
+  resolvers: [posts.resolvers, users.resolvers]
 });
 
 let db;
-
 const apolloServer = new ApolloServer({
   schema,
   context: async () => {
