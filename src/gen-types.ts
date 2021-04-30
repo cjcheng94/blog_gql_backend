@@ -40,6 +40,7 @@ export type Query = {
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
   posts?: Maybe<Array<Maybe<Post>>>;
   updatePost?: Maybe<Post>;
+  user?: Maybe<User>;
   userLogin?: Maybe<Scalars['String']>;
   userSignup?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
@@ -74,6 +75,11 @@ export type QueryUpdatePostArgs = {
 };
 
 
+export type QueryUserArgs = {
+  username?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryUserLoginArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
@@ -88,7 +94,7 @@ export type QueryUserSignupArgs = {
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID'];
-  posts?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  posts: Array<Maybe<Post>>;
   username: Scalars['String'];
   password: Scalars['String'];
 };
@@ -248,6 +254,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, 'username'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
   updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryUpdatePostArgs, '_id'>>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>;
   userLogin?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'username' | 'password'>>;
   userSignup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'username' | 'password'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
@@ -255,7 +262,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['ID']>>>, ParentType, ContextType>;
+  posts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
