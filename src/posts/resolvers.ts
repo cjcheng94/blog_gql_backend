@@ -59,7 +59,7 @@ const resolvers: Resolvers = {
         title,
         content,
         _id: new ObjectId(),
-        author: userData.userId,
+        author: new ObjectId(userData.userId),
         date: new Date().toISOString()
       };
 
@@ -87,6 +87,13 @@ const resolvers: Resolvers = {
       const postToUpdate = await context.db
         .collection("posts")
         .findOne({ _id: objId });
+
+      // Cannot find such a post
+      if (postToUpdate === null) {
+        console.log("Error, cannot find updated post");
+        return;
+      }
+
       const postOwner = postToUpdate.author;
 
       // Not your post
