@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -12,6 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Token: any;
 };
 
 
@@ -62,7 +63,7 @@ export type Query = {
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
   posts?: Maybe<Array<Maybe<Post>>>;
   user?: Maybe<User>;
-  userLogin?: Maybe<Scalars['String']>;
+  userLogin?: Maybe<Scalars['Token']>;
   userSignup?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
 };
@@ -93,6 +94,7 @@ export type QueryUserSignupArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
 };
+
 
 export type User = {
   __typename?: 'User';
@@ -191,6 +193,7 @@ export type ResolversTypes = ResolversObject<{
   Post: ResolverTypeWrapper<Post>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Query: ResolverTypeWrapper<{}>;
+  Token: ResolverTypeWrapper<Scalars['Token']>;
   User: ResolverTypeWrapper<User>;
   AdditionalEntityFields: AdditionalEntityFields;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -203,6 +206,7 @@ export type ResolversParentTypes = ResolversObject<{
   Post: Post;
   ID: Scalars['ID'];
   Query: {};
+  Token: Scalars['Token'];
   User: User;
   AdditionalEntityFields: AdditionalEntityFields;
   Boolean: Scalars['Boolean'];
@@ -263,10 +267,14 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, 'username'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>;
-  userLogin?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'username' | 'password'>>;
+  userLogin?: Resolver<Maybe<ResolversTypes['Token']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'username' | 'password'>>;
   userSignup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'username' | 'password'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
 }>;
+
+export interface TokenScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Token'], any> {
+  name: 'Token';
+}
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -280,6 +288,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Token?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 }>;
 

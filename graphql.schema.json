@@ -408,7 +408,7 @@
             ],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Token",
               "ofType": null
             },
             "isDeprecated": false,
@@ -478,6 +478,16 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Token",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
