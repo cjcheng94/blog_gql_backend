@@ -1,11 +1,12 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
+  scalar Token
   extend type Query {
     users: [User]
     user(username: String): User
     userSignup(username: String!, password: String!): User
-    userLogin(username: String!, password: String!): String
+    userLogin(username: String!, password: String!): Token
     getUserPosts(username: String!): [Post]
   }
   type User {

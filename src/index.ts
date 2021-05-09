@@ -2,6 +2,7 @@ import { ApolloServer, gql } from "apollo-server";
 import { makeExecutableSchema } from "graphql-tools";
 import { default as mongodb, Db } from "mongodb";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 import * as posts from "./posts";
 import * as users from "./users";
 const { MongoClient } = mongodb;
@@ -9,6 +10,7 @@ dotenv.config();
 
 const typeDef = gql`
   type Query
+  type Mutation
 `;
 
 const schema = makeExecutableSchema({
@@ -19,7 +21,8 @@ const schema = makeExecutableSchema({
 let db: Db | undefined;
 const apolloServer = new ApolloServer({
   schema,
-  context: async () => {
+  context: async ({ req }) => {
+    // Connect to database
     if (!db) {
       try {
         const dbClient = new MongoClient(process.env.MONGO_DB_URI as string, {
@@ -33,7 +36,24 @@ const apolloServer = new ApolloServer({
         console.log("Error while connecting to database😔", e);
       }
     }
-    return { db };
+
+    // User auth
+    let token = "";
+    let userData = null;
+    let isAuthed = false;
+
+    if (req.headers.authorization) {
+      token = req.headers.authorization.split(" ")[1];
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_KEY as string);
+        isAuthed = true;
+        userData = decoded;
+      } catch (err) {
+        console.log("Auth failed");
+      }
+    }
+
+    return { db, isAuthed, userData };
   }
 });
 
