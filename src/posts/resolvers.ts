@@ -49,7 +49,7 @@ const resolvers: Resolvers = {
       const { isAuthed, userData } = context;
 
       // User not logged in
-      if (isAuthed) {
+      if (!isAuthed) {
         console.log("Error, unauthorized");
         return;
       }

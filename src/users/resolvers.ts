@@ -78,6 +78,40 @@ const resolvers: Resolvers = {
         console.log("Error, database error");
         return;
       }
+    },
+    async userSignup(parent, args, context) {
+      const { username, password } = args;
+      const { db } = context;
+      try {
+        // Query username for duplicates
+        const dupeUser = await db.collection("users").findOne({ username });
+        // Username already exists
+        if (dupeUser !== null) {
+          console.log("Error, username already exists");
+          return;
+        }
+        // Username ok, hash password
+        const hash = await bcrypt.hash(password, 10);
+        // Create new user
+        const newUser = {
+          _id: new ObjectId(),
+          posts: [],
+          username,
+          password: hash
+        };
+        const dbRes = await db.collection("users").insertOne(newUser);
+        // Error creating user
+        if (dbRes.insertedCount < 1) {
+          console.log("Error, operation error");
+          return;
+        }
+        const newUserData = dbRes.ops[0];
+        // Success, return newly created user
+        return newUserData;
+      } catch (error) {
+        console.log("Error, database error");
+        return;
+      }
     }
   },
   User: {
