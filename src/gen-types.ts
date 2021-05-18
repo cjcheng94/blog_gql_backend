@@ -101,7 +101,6 @@ export type User = {
   _id: Scalars['ID'];
   posts: Array<Maybe<Post>>;
   username: Scalars['String'];
-  password: Scalars['String'];
 };
 
 export type AdditionalEntityFields = {
@@ -280,7 +279,6 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   posts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

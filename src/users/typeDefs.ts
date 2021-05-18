@@ -13,7 +13,6 @@ const typeDefs = gql`
     _id: ID!
     posts: [Post]!
     username: String!
-    password: String!
   }
 `;
 
