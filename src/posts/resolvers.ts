@@ -1,12 +1,13 @@
 import { ObjectId } from "mongodb";
 import { AuthenticationError, ForbiddenError } from "apollo-server";
-import { QueryResolvers, MutationResolvers } from "../gen-types";
+import { QueryResolvers, MutationResolvers, PostResolvers } from "../gen-types";
 import { WithIndexSignature } from "Utils";
 import { NotFoundError } from "../errors";
 
 interface Resolvers extends WithIndexSignature {
   Query: QueryResolvers;
   Mutation: MutationResolvers;
+  Post: PostResolvers;
 }
 
 const resolvers: Resolvers = {
@@ -20,11 +21,11 @@ const resolvers: Resolvers = {
               from: "users",
               localField: "author",
               foreignField: "_id",
-              as: "author"
+              as: "authorInfo"
             }
           },
           {
-            $unwind: "$author"
+            $unwind: "$authorInfo"
           }
         ])
         .toArray();
@@ -46,7 +47,7 @@ const resolvers: Resolvers = {
         throw new NotFoundError("Cannot find user");
       }
       // Replace old user id with user object
-      data.author = authorObject;
+      data.authorInfo = authorObject;
       return data;
     }
   },
@@ -142,6 +143,15 @@ const resolvers: Resolvers = {
       }
       // Deleted successfully
       return postToDelete;
+    }
+  },
+  Post: {
+    async authorInfo(post, args, context) {
+      const { author } = post;
+      const authorObject = await context.db
+        .collection("users")
+        .findOne({ _id: new ObjectId(author) });
+      return authorObject;
     }
   }
 };

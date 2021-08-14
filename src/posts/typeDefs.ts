@@ -13,9 +13,10 @@ const typeDefs = gql`
   type Post {
     _id: ID!
     title: String!
-    author: User!
+    author: String!
     content: String!
     date: String!
+    authorInfo: User!
   }
 `;
 
