@@ -1,4 +1,4 @@
-import { default as mongodb } from "mongodb";
+import { ObjectId } from "mongodb";
 import { AuthenticationError } from "apollo-server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -7,8 +7,6 @@ import { WithIndexSignature } from "Utils";
 import { NotFoundError, ConflictError } from "../errors";
 import dotenv from "dotenv";
 dotenv.config();
-
-const { ObjectId } = mongodb;
 interface Resolvers extends WithIndexSignature {
   Query: QueryResolvers;
   User: UserResolvers;

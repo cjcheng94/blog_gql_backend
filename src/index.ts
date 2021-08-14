@@ -1,11 +1,11 @@
 import { ApolloServer, gql } from "apollo-server";
 import { makeExecutableSchema } from "graphql-tools";
-import { default as mongodb, Db } from "mongodb";
+import { MongoClient, Db } from "mongodb";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import * as posts from "./posts";
 import * as users from "./users";
-const { MongoClient } = mongodb;
+
 dotenv.config();
 
 const typeDef = gql`
@@ -25,18 +25,14 @@ const apolloServer = new ApolloServer({
     // Connect to database
     if (!db) {
       try {
-        const dbClient = new MongoClient(process.env.MONGO_DB_URI as string, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true
-        });
-        if (!dbClient.isConnected()) await dbClient.connect();
+        const dbClient = new MongoClient(process.env.MONGO_DB_URI as string);
+        await dbClient.connect();
         db = dbClient.db("node_rest_api_blog");
         console.log("Database connected👌");
       } catch (e) {
         console.log("Error while connecting to database😔", e);
       }
     }
-
     // User auth
     let token = "";
     let userData = null;
