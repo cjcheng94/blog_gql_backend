@@ -52,9 +52,10 @@ export type Post = {
   __typename?: 'Post';
   _id: Scalars['ID'];
   title: Scalars['String'];
-  author: User;
+  author: Scalars['String'];
   content: Scalars['String'];
   date: Scalars['String'];
+  authorInfo: User;
 };
 
 export type Query = {
@@ -75,7 +76,7 @@ export type QueryGetPostByIdArgs = {
 
 
 export type QueryGetUserPostsArgs = {
-  username: Scalars['String'];
+  _id: Scalars['String'];
 };
 
 
@@ -99,7 +100,6 @@ export type QueryUserSignupArgs = {
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID'];
-  posts: Array<Maybe<Post>>;
   username: Scalars['String'];
 };
 
@@ -255,15 +255,16 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
-  getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, 'username'>>;
+  getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>;
   userLogin?: Resolver<Maybe<ResolversTypes['Token']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'username' | 'password'>>;
@@ -277,7 +278,6 @@ export interface TokenScalarConfig extends GraphQLScalarTypeConfig<ResolversType
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  posts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
