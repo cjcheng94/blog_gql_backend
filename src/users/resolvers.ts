@@ -1,17 +1,14 @@
-import { default as mongodb } from "mongodb";
+import { ObjectId } from "mongodb";
 import { AuthenticationError } from "apollo-server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { QueryResolvers, UserResolvers } from "../gen-types";
+import { QueryResolvers } from "../gen-types";
 import { WithIndexSignature } from "Utils";
 import { NotFoundError, ConflictError } from "../errors";
 import dotenv from "dotenv";
 dotenv.config();
-
-const { ObjectId } = mongodb;
 interface Resolvers extends WithIndexSignature {
   Query: QueryResolvers;
-  User: UserResolvers;
 }
 
 const resolvers: Resolvers = {
@@ -87,20 +84,14 @@ const resolvers: Resolvers = {
       const newUserData = dbRes.ops[0];
       // Success, return newly created user
       return newUserData;
-    }
-  },
-
-  User: {
-    async posts(user, args, context) {
-      const { posts, _id } = user;
-      // User has no posts
-      if (!posts || posts.length < 1) {
-        return [];
-      }
-      const userObjId = new ObjectId(_id);
-      const data = await context.db
+    },
+    async getUserPosts(parent, args, context) {
+      const { _id } = args;
+      const { db } = context;
+      const userObjectId = new ObjectId(_id);
+      const data = await db
         .collection("posts")
-        .find({ author: userObjId })
+        .find({ author: userObjectId })
         .toArray();
       return data;
     }

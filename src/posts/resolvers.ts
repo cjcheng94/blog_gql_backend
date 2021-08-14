@@ -1,14 +1,13 @@
-import { default as mongodb } from "mongodb";
+import { ObjectId } from "mongodb";
 import { AuthenticationError, ForbiddenError } from "apollo-server";
-import { QueryResolvers, MutationResolvers } from "../gen-types";
+import { QueryResolvers, MutationResolvers, PostResolvers } from "../gen-types";
 import { WithIndexSignature } from "Utils";
 import { NotFoundError } from "../errors";
-
-const { ObjectId } = mongodb;
 
 interface Resolvers extends WithIndexSignature {
   Query: QueryResolvers;
   Mutation: MutationResolvers;
+  Post: PostResolvers;
 }
 
 const resolvers: Resolvers = {
@@ -16,11 +15,22 @@ const resolvers: Resolvers = {
     async posts(parent, args, context) {
       const data = await context.db
         .collection("posts")
-        .find()
+        .aggregate([
+          {
+            $lookup: {
+              from: "users",
+              localField: "author",
+              foreignField: "_id",
+              as: "authorInfo"
+            }
+          },
+          {
+            $unwind: "$authorInfo"
+          }
+        ])
         .toArray();
       return data;
     },
-
     async getPostById(parent, args, context) {
       const { _id } = args;
       const objId = new ObjectId(_id);
@@ -28,6 +38,16 @@ const resolvers: Resolvers = {
       if (data === null) {
         throw new NotFoundError("Cannot find post");
       }
+      // Find corresponding User object using the user id "author"
+      const authorObject = await context.db
+        .collection("users")
+        .findOne({ _id: new ObjectId(data.author) });
+      // cannot find user
+      if (authorObject === null) {
+        throw new NotFoundError("Cannot find user");
+      }
+      // Replace old user id with user object
+      data.authorInfo = authorObject;
       return data;
     }
   },
@@ -123,6 +143,15 @@ const resolvers: Resolvers = {
       }
       // Deleted successfully
       return postToDelete;
+    }
+  },
+  Post: {
+    async authorInfo(post, args, context) {
+      const { author } = post;
+      const authorObject = await context.db
+        .collection("users")
+        .findOne({ _id: new ObjectId(author) });
+      return authorObject;
     }
   }
 };

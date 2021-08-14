@@ -16,6 +16,7 @@ const typeDefs = gql`
     author: String!
     content: String!
     date: String!
+    authorInfo: User!
   }
 `;
 
