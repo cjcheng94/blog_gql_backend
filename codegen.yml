@@ -2,7 +2,7 @@ overwrite: true
 schema: ["src/posts/typeDefs.ts", "src/users/typeDefs.ts"]
 documents: null
 generates:
-  src/gen-types.ts:
+  src/gen-types.d.ts:
     plugins:
       - "typescript"
       - "typescript-resolvers"
