@@ -63,7 +63,7 @@ const resolvers: Resolvers = {
       // Query username for duplicates
       const dupeUser = await db.collection("users").findOne({ username });
       // Username already exists
-      if (dupeUser !== null) {
+      if (!!dupeUser) {
         throw new ConflictError("username already exists");
       }
       // Username ok, hash password
@@ -77,11 +77,16 @@ const resolvers: Resolvers = {
       };
       const dbRes = await db.collection("users").insertOne(newUser);
       // Error creating user
-      if (dbRes.insertedCount < 1) {
+      if (!dbRes.insertedId) {
         // Effectively INTERNAL_SERVER_ERROR type
         throw new Error("Internal server error");
       }
-      const newUserData = dbRes.ops[0];
+      const newUserData = await context.db
+        .collection("users")
+        .findOne({ _id: dbRes.insertedId });
+      if (newUserData === null) {
+        throw new NotFoundError("Cannot find user");
+      }
       // Success, return newly created user
       return newUserData;
     },
