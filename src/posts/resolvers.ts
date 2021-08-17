@@ -88,9 +88,10 @@ const resolvers: Resolvers = {
       if (postToUpdate === null) {
         throw new NotFoundError("Cannot find post");
       }
-      const postOwner = postToUpdate.author;
+      const postOwnerId = postToUpdate.author.toHexString();
+      const userId = new ObjectId(userData.userId).toHexString();
       // Not your post
-      if (postOwner !== userData.userId) {
+      if (postOwnerId !== userId) {
         throw new ForbiddenError("Forbidden, not your post");
       }
       // update post
@@ -129,9 +130,10 @@ const resolvers: Resolvers = {
       if (postToDelete === null) {
         throw new NotFoundError("Cannot find post");
       }
-      const postOwner = postToDelete.author;
+      const postOwnerId = postToDelete.author.toHexString();
+      const userId = new ObjectId(userData.userId).toHexString();
       // Not your post
-      if (postOwner !== userData.userId) {
+      if (postOwnerId !== userId) {
         throw new ForbiddenError("Forbidden, not your post");
       }
       // Delete post
