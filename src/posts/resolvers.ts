@@ -68,7 +68,17 @@ const resolvers: Resolvers = {
         date: new Date().toISOString()
       };
       const dbRes = await context.db.collection("posts").insertOne(newPost);
-      const newPostData = dbRes.ops[0];
+      // Error creating post
+      if (!dbRes.insertedId) {
+        // Effectively INTERNAL_SERVER_ERROR type
+        throw new Error("Internal server error");
+      }
+      const newPostData = await context.db
+        .collection("posts")
+        .findOne({ _id: dbRes.insertedId });
+      if (newPostData === null) {
+        throw new NotFoundError("Cannot find post");
+      }
       return newPostData;
     },
 
