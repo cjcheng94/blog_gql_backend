@@ -54,7 +54,7 @@ const resolvers: Resolvers = {
         { expiresIn: "2 days" }
       );
       // Success, grant token
-      return token;
+      return { userId: targetUser._id, username: targetUser.username, token };
     },
 
     async userSignup(parent, args, context) {
