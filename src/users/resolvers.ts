@@ -25,7 +25,7 @@ const resolvers: Resolvers = {
       const { username } = args;
       const data = await context.db.collection("users").findOne({ username });
       // cannot find user
-      if (data === null) {
+      if (!data) {
         throw new NotFoundError("Cannot find user");
       }
       return data;
@@ -36,7 +36,7 @@ const resolvers: Resolvers = {
       const { db } = context;
       const targetUser = await db.collection("users").findOne({ username });
       // cannot find user
-      if (targetUser === null) {
+      if (!targetUser) {
         throw new AuthenticationError("Auth failed");
       }
       // Found user, use bcrypt to compare passwords
@@ -84,7 +84,7 @@ const resolvers: Resolvers = {
       const newUserData = await context.db
         .collection("users")
         .findOne({ _id: dbRes.insertedId });
-      if (newUserData === null) {
+      if (!newUserData) {
         throw new NotFoundError("Cannot find user");
       }
       // Success, return newly created user
