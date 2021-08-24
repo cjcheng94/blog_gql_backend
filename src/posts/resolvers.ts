@@ -35,7 +35,7 @@ const resolvers: Resolvers = {
       const { _id } = args;
       const objId = new ObjectId(_id);
       const data = await context.db.collection("posts").findOne({ _id: objId });
-      if (data === null) {
+      if (!data) {
         throw new NotFoundError("Cannot find post");
       }
       // Find corresponding User object using the user id "author"
@@ -43,7 +43,7 @@ const resolvers: Resolvers = {
         .collection("users")
         .findOne({ _id: new ObjectId(data.author) });
       // cannot find user
-      if (authorObject === null) {
+      if (!authorObject) {
         throw new NotFoundError("Cannot find user");
       }
       // Replace old user id with user object
@@ -76,7 +76,7 @@ const resolvers: Resolvers = {
       const newPostData = await context.db
         .collection("posts")
         .findOne({ _id: dbRes.insertedId });
-      if (newPostData === null) {
+      if (!newPostData) {
         throw new NotFoundError("Cannot find post");
       }
       return newPostData;
@@ -95,7 +95,7 @@ const resolvers: Resolvers = {
         .collection("posts")
         .findOne({ _id: objId });
       // Cannot find such a post
-      if (postToUpdate === null) {
+      if (!postToUpdate) {
         throw new NotFoundError("Cannot find post");
       }
       const postOwnerId = postToUpdate.author.toHexString();
@@ -118,7 +118,7 @@ const resolvers: Resolvers = {
         .collection("posts")
         .findOne({ _id: objId });
       // Cannot find such a post
-      if (updatedPost === null) {
+      if (!updatedPost) {
         throw new NotFoundError("Cannot find updated post");
       }
       // All done, return updated post
@@ -137,7 +137,7 @@ const resolvers: Resolvers = {
         .collection("posts")
         .findOne({ _id: objId });
       // Cannot find such a post
-      if (postToDelete === null) {
+      if (!postToDelete) {
         throw new NotFoundError("Cannot find post");
       }
       const postOwnerId = postToDelete.author.toHexString();
