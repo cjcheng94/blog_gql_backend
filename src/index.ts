@@ -50,6 +50,22 @@ const apolloServer = new ApolloServer({
     }
 
     return { db, isAuthed, userData };
+  },
+  formatResponse: (response, requestContext) => {
+    if (
+      !requestContext.response ||
+      !requestContext.response.http ||
+      !requestContext.operation
+    ) {
+      return null;
+    }
+    // Add X-Is-Cacheable header to "query" type requests
+    const isCacheable = requestContext.operation.operation === "query";
+    if (isCacheable) {
+      requestContext.response.http.headers.set("X-Is-Cacheable", "true");
+      return response;
+    }
+    return null;
   }
 });
 
