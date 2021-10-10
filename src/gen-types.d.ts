@@ -70,6 +70,7 @@ export type Query = {
   getPostById?: Maybe<Post>;
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
   posts?: Maybe<Array<Maybe<Post>>>;
+  search?: Maybe<Array<Maybe<Post>>>;
   user?: Maybe<User>;
   userLogin?: Maybe<LoginResponse>;
   userSignup?: Maybe<User>;
@@ -84,6 +85,11 @@ export type QueryGetPostByIdArgs = {
 
 export type QueryGetUserPostsArgs = {
   _id: Scalars['String'];
+};
+
+
+export type QuerySearchArgs = {
+  searchTerm?: Maybe<Scalars['String']>;
 };
 
 
@@ -282,6 +288,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
+  search?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, never>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>;
   userLogin?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'username' | 'password'>>;
   userSignup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'username' | 'password'>>;
