@@ -4,6 +4,7 @@ const typeDefs = gql`
   extend type Query {
     posts: [Post]
     getPostById(_id: String!): Post
+    search(searchTerm: String): [Post]
   }
   extend type Mutation {
     createPost(title: String!, content: String!): Post!
