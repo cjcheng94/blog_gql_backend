@@ -40,8 +40,9 @@ export type LoginResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
-  updatePost?: Maybe<Post>;
+  createTag?: Maybe<Tag>;
   deletePost?: Maybe<Post>;
+  updatePost?: Maybe<Post>;
 };
 
 
@@ -51,15 +52,20 @@ export type MutationCreatePostArgs = {
 };
 
 
-export type MutationUpdatePostArgs = {
-  _id: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  content?: Maybe<Scalars['String']>;
+export type MutationCreateTagArgs = {
+  name: Scalars['String'];
 };
 
 
 export type MutationDeletePostArgs = {
   _id: Scalars['String'];
+};
+
+
+export type MutationUpdatePostArgs = {
+  _id: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
 };
 
 export type Post = {
@@ -90,6 +96,8 @@ export type Query = {
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
   posts?: Maybe<Array<Maybe<Post>>>;
   search?: Maybe<Array<Maybe<PostResult>>>;
+  tag?: Maybe<Tag>;
+  tags?: Maybe<Array<Maybe<Tag>>>;
   user?: Maybe<User>;
   userLogin?: Maybe<LoginResponse>;
   userSignup?: Maybe<User>;
@@ -112,6 +120,11 @@ export type QuerySearchArgs = {
 };
 
 
+export type QueryTagArgs = {
+  _id: Scalars['ID'];
+};
+
+
 export type QueryUserArgs = {
   username?: Maybe<Scalars['String']>;
 };
@@ -126,6 +139,12 @@ export type QueryUserLoginArgs = {
 export type QueryUserSignupArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Tag = {
+  __typename?: 'Tag';
+  _id: Scalars['ID'];
+  name: Scalars['String'];
 };
 
 export type Text = {
@@ -234,6 +253,7 @@ export type ResolversTypes = ResolversObject<{
   Post: ResolverTypeWrapper<Post>;
   PostResult: ResolverTypeWrapper<PostResult>;
   Query: ResolverTypeWrapper<{}>;
+  Tag: ResolverTypeWrapper<Tag>;
   Text: ResolverTypeWrapper<Text>;
   Token: ResolverTypeWrapper<Scalars['Token']>;
   User: ResolverTypeWrapper<User>;
@@ -252,6 +272,7 @@ export type ResolversParentTypes = ResolversObject<{
   Post: Post;
   PostResult: PostResult;
   Query: {};
+  Tag: Tag;
   Text: Text;
   Token: Scalars['Token'];
   User: User;
@@ -310,8 +331,9 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title' | 'content'>>;
-  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id'>>;
+  createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'name'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, '_id'>>;
+  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id'>>;
 }>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
@@ -341,10 +363,18 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
   search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, never>>;
+  tag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QueryTagArgs, '_id'>>;
+  tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>;
   userLogin?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'username' | 'password'>>;
   userSignup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'username' | 'password'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+}>;
+
+export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = ResolversObject<{
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type TextResolvers<ContextType = any, ParentType extends ResolversParentTypes['Text'] = ResolversParentTypes['Text']> = ResolversObject<{
@@ -370,6 +400,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Post?: PostResolvers<ContextType>;
   PostResult?: PostResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Tag?: TagResolvers<ContextType>;
   Text?: TextResolvers<ContextType>;
   Token?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
