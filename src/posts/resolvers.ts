@@ -58,11 +58,15 @@ const resolvers: Resolvers = {
           {
             $search: {
               index: "default",
-              text: {
+              phrase: {
                 query: searchTerm,
+                slop: 4,
                 path: {
                   wildcard: "*"
                 }
+              },
+              highlight: {
+                path: ["title", "content"]
               }
             }
           },
@@ -76,6 +80,18 @@ const resolvers: Resolvers = {
           },
           {
             $unwind: "$authorInfo"
+          },
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              date: 1,
+              content: 1,
+              author: 1,
+              authorInfo: 1,
+              score: { $meta: "searchScore" },
+              highlights: { $meta: "searchHighlights" }
+            }
           }
         ])
         .toArray();
