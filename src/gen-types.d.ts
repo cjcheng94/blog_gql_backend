@@ -23,6 +23,13 @@ export type Scalars = {
 
 
 
+export type Highlight = {
+  __typename?: 'Highlight';
+  path?: Maybe<Scalars['String']>;
+  texts?: Maybe<Array<Maybe<Text>>>;
+  score?: Maybe<Scalars['Float']>;
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   userId?: Maybe<Scalars['ID']>;
@@ -65,11 +72,24 @@ export type Post = {
   authorInfo: User;
 };
 
+export type PostResult = {
+  __typename?: 'PostResult';
+  _id: Scalars['ID'];
+  title: Scalars['String'];
+  author: Scalars['String'];
+  content: Scalars['String'];
+  date: Scalars['String'];
+  score?: Maybe<Scalars['Float']>;
+  authorInfo: User;
+  highlights?: Maybe<Array<Maybe<Highlight>>>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getPostById?: Maybe<Post>;
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
   posts?: Maybe<Array<Maybe<Post>>>;
+  search?: Maybe<Array<Maybe<PostResult>>>;
   user?: Maybe<User>;
   userLogin?: Maybe<LoginResponse>;
   userSignup?: Maybe<User>;
@@ -87,6 +107,11 @@ export type QueryGetUserPostsArgs = {
 };
 
 
+export type QuerySearchArgs = {
+  searchTerm?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryUserArgs = {
   username?: Maybe<Scalars['String']>;
 };
@@ -101,6 +126,12 @@ export type QueryUserLoginArgs = {
 export type QueryUserSignupArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Text = {
+  __typename?: 'Text';
+  value?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
 };
 
 
@@ -194,12 +225,16 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  Highlight: ResolverTypeWrapper<Highlight>;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
   Mutation: ResolverTypeWrapper<{}>;
   Post: ResolverTypeWrapper<Post>;
+  PostResult: ResolverTypeWrapper<PostResult>;
   Query: ResolverTypeWrapper<{}>;
+  Text: ResolverTypeWrapper<Text>;
   Token: ResolverTypeWrapper<Scalars['Token']>;
   User: ResolverTypeWrapper<User>;
   AdditionalEntityFields: AdditionalEntityFields;
@@ -208,12 +243,16 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  Highlight: Highlight;
+  String: Scalars['String'];
+  Float: Scalars['Float'];
   LoginResponse: LoginResponse;
   ID: Scalars['ID'];
-  String: Scalars['String'];
   Mutation: {};
   Post: Post;
+  PostResult: PostResult;
   Query: {};
+  Text: Text;
   Token: Scalars['Token'];
   User: User;
   AdditionalEntityFields: AdditionalEntityFields;
@@ -255,6 +294,13 @@ export type MapDirectiveArgs = {   path: Scalars['String']; };
 
 export type MapDirectiveResolver<Result, Parent, ContextType = any, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type HighlightResolvers<ContextType = any, ParentType extends ResolversParentTypes['Highlight'] = ResolversParentTypes['Highlight']> = ResolversObject<{
+  path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  texts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Text']>>>, ParentType, ContextType>;
+  score?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = ResolversObject<{
   userId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -278,14 +324,33 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PostResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['PostResult'] = ResolversParentTypes['PostResult']> = ResolversObject<{
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  score?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  highlights?: Resolver<Maybe<Array<Maybe<ResolversTypes['Highlight']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
+  search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, never>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>;
   userLogin?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'username' | 'password'>>;
   userSignup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'username' | 'password'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+}>;
+
+export type TextResolvers<ContextType = any, ParentType extends ResolversParentTypes['Text'] = ResolversParentTypes['Text']> = ResolversObject<{
+  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export interface TokenScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Token'], any> {
@@ -299,10 +364,13 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Highlight?: HighlightResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
+  PostResult?: PostResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Text?: TextResolvers<ContextType>;
   Token?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 }>;

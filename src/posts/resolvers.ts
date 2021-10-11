@@ -49,6 +49,53 @@ const resolvers: Resolvers = {
       // Replace old user id with user object
       data.authorInfo = authorObject;
       return data;
+    },
+    async search(parent, args, context) {
+      const { searchTerm } = args;
+      const data = await context.db
+        .collection("posts")
+        .aggregate([
+          {
+            $search: {
+              index: "default",
+              phrase: {
+                query: searchTerm,
+                slop: 4,
+                path: {
+                  wildcard: "*"
+                }
+              },
+              highlight: {
+                path: ["title", "content"]
+              }
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "author",
+              foreignField: "_id",
+              as: "authorInfo"
+            }
+          },
+          {
+            $unwind: "$authorInfo"
+          },
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              date: 1,
+              content: 1,
+              author: 1,
+              authorInfo: 1,
+              score: { $meta: "searchScore" },
+              highlights: { $meta: "searchHighlights" }
+            }
+          }
+        ])
+        .toArray();
+      return data;
     }
   },
   Mutation: {
