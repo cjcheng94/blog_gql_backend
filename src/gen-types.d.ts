@@ -49,6 +49,7 @@ export type Mutation = {
 export type MutationCreatePostArgs = {
   title: Scalars['String'];
   content: Scalars['String'];
+  tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
 
@@ -66,6 +67,7 @@ export type MutationUpdatePostArgs = {
   _id: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   content?: Maybe<Scalars['String']>;
+  tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
 export type Post = {
@@ -76,6 +78,8 @@ export type Post = {
   content: Scalars['String'];
   date: Scalars['String'];
   authorInfo: User;
+  tags: Array<Maybe<Tag>>;
+  tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
 export type PostResult = {
@@ -87,6 +91,8 @@ export type PostResult = {
   date: Scalars['String'];
   score?: Maybe<Scalars['Float']>;
   authorInfo: User;
+  tags: Array<Maybe<Tag>>;
+  tagIds: Array<Maybe<Scalars['ID']>>;
   highlights?: Maybe<Array<Maybe<Highlight>>>;
 };
 
@@ -330,10 +336,10 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title' | 'content'>>;
+  createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title' | 'content' | 'tagIds'>>;
   createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'name'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, '_id'>>;
-  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id'>>;
+  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'tagIds'>>;
 }>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
@@ -343,6 +349,8 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
+  tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -354,6 +362,8 @@ export type PostResultResolvers<ContextType = any, ParentType extends ResolversP
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
+  tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
   highlights?: Resolver<Maybe<Array<Maybe<ResolversTypes['Highlight']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

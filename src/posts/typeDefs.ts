@@ -7,8 +7,13 @@ const typeDefs = gql`
     search(searchTerm: String): [PostResult]
   }
   extend type Mutation {
-    createPost(title: String!, content: String!): Post!
-    updatePost(_id: String!, title: String, content: String): Post
+    createPost(title: String!, content: String!, tagIds: [ID]!): Post!
+    updatePost(
+      _id: String!
+      title: String
+      content: String
+      tagIds: [ID]!
+    ): Post
     deletePost(_id: String!): Post
   }
   type Post {
@@ -18,6 +23,8 @@ const typeDefs = gql`
     content: String!
     date: String!
     authorInfo: User!
+    tags: [Tag]!
+    tagIds: [ID]!
   }
   type Text {
     value: String
@@ -36,6 +43,8 @@ const typeDefs = gql`
     date: String!
     score: Float
     authorInfo: User!
+    tags: [Tag]!
+    tagIds: [ID]!
     highlights: [Highlight]
   }
 `;

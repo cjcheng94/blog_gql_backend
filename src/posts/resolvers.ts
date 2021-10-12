@@ -15,19 +15,7 @@ const resolvers: Resolvers = {
     async posts(parent, args, context) {
       const data = await context.db
         .collection("posts")
-        .aggregate([
-          {
-            $lookup: {
-              from: "users",
-              localField: "author",
-              foreignField: "_id",
-              as: "authorInfo"
-            }
-          },
-          {
-            $unwind: "$authorInfo"
-          }
-        ])
+        .find()
         .toArray();
       return data;
     },
@@ -38,16 +26,6 @@ const resolvers: Resolvers = {
       if (!data) {
         throw new NotFoundError("Cannot find post");
       }
-      // Find corresponding User object using the user id "author"
-      const authorObject = await context.db
-        .collection("users")
-        .findOne({ _id: new ObjectId(data.author) });
-      // cannot find user
-      if (!authorObject) {
-        throw new NotFoundError("Cannot find user");
-      }
-      // Replace old user id with user object
-      data.authorInfo = authorObject;
       return data;
     },
     async search(parent, args, context) {
@@ -100,16 +78,18 @@ const resolvers: Resolvers = {
   },
   Mutation: {
     async createPost(parent, args, context) {
-      const { title, content } = args;
+      const { title, content, tagIds } = args;
       const { isAuthed, userData } = context;
       // User not logged in
       if (!isAuthed) {
         throw new AuthenticationError("Unauthorized");
       }
+      const tagObjectIds = tagIds.map(tag => new ObjectId(tag as string));
       // create new Post
       const newPost = {
         title,
         content,
+        tagIds: tagObjectIds,
         _id: new ObjectId(),
         author: new ObjectId(userData.userId),
         date: new Date().toISOString()
@@ -130,7 +110,7 @@ const resolvers: Resolvers = {
     },
 
     async updatePost(parent, args, context) {
-      const { _id, title, content } = args;
+      const { _id, title, content, tagIds } = args;
       const { isAuthed, userData, db } = context;
       // User not logged in
       if (!isAuthed) {
@@ -151,10 +131,14 @@ const resolvers: Resolvers = {
       if (postOwnerId !== userId) {
         throw new ForbiddenError("Forbidden, not your post");
       }
+      const tagObjectIds = tagIds.map(tag => new ObjectId(tag as string));
       // update post
       const dbRes = await db
         .collection("posts")
-        .updateOne({ _id: objId }, { $set: { title, content } });
+        .updateOne(
+          { _id: objId },
+          { $set: { title, content, tagIds: tagObjectIds } }
+        );
       // Operation error
       if (dbRes.matchedCount !== 1 || dbRes.modifiedCount !== 1) {
         // Effectively INTERNAL_SERVER_ERROR type
@@ -164,7 +148,7 @@ const resolvers: Resolvers = {
       const updatedPost = await context.db
         .collection("posts")
         .findOne({ _id: objId });
-      // Cannot find such a post
+      // Cannot find such post
       if (!updatedPost) {
         throw new NotFoundError("Cannot find updated post");
       }
@@ -211,6 +195,21 @@ const resolvers: Resolvers = {
         .collection("users")
         .findOne({ _id: new ObjectId(author) });
       return authorObject;
+    },
+    async tags(post, args, context) {
+      const { tagIds } = post;
+      if (tagIds.length < 1) {
+        return [];
+      }
+      const tagObjects = await Promise.all(
+        tagIds.map(
+          async tagId =>
+            await context.db
+              .collection("tags")
+              .findOne({ _id: new ObjectId(tagId as string) })
+        )
+      );
+      return tagObjects;
     }
   }
 };
