@@ -58,7 +58,17 @@ const resolvers: Resolvers = {
       return data;
     },
     async search(parent, args, context) {
-      const { searchTerm } = args;
+      const { searchTerm, tagIds } = args;
+
+      // Construct objectIds for tagids
+      const tagObjectIds: ObjectId[] = [];
+      if (tagIds) {
+        tagIds.forEach(id => {
+          if (!id) return;
+          tagObjectIds.push(new ObjectId(id));
+        });
+      }
+
       const data = await context.db
         .collection("posts")
         .aggregate([
@@ -77,6 +87,16 @@ const resolvers: Resolvers = {
               }
             }
           },
+          // Include tags stage IF tagIds is provided
+          ...(tagIds
+            ? [
+                {
+                  $match: {
+                    tagIds: { $all: tagObjectIds }
+                  }
+                }
+              ]
+            : []),
           {
             $lookup: {
               from: "users",

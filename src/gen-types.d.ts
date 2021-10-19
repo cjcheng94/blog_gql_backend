@@ -129,6 +129,7 @@ export type QueryGetUserPostsArgs = {
 
 export type QuerySearchArgs = {
   searchTerm?: Maybe<Scalars['String']>;
+  tagIds?: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 
