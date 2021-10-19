@@ -65,8 +65,8 @@ export type MutationDeletePostArgs = {
 
 export type MutationUpdatePostArgs = {
   _id: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  content?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+  content: Scalars['String'];
   tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
@@ -99,6 +99,7 @@ export type PostResult = {
 export type Query = {
   __typename?: 'Query';
   getPostById?: Maybe<Post>;
+  getPostsByTags?: Maybe<Array<Maybe<Post>>>;
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
   posts?: Maybe<Array<Maybe<Post>>>;
   search?: Maybe<Array<Maybe<PostResult>>>;
@@ -116,6 +117,11 @@ export type QueryGetPostByIdArgs = {
 };
 
 
+export type QueryGetPostsByTagsArgs = {
+  tagIds: Array<Maybe<Scalars['ID']>>;
+};
+
+
 export type QueryGetUserPostsArgs = {
   _id: Scalars['String'];
 };
@@ -123,6 +129,7 @@ export type QueryGetUserPostsArgs = {
 
 export type QuerySearchArgs = {
   searchTerm?: Maybe<Scalars['String']>;
+  tagIds?: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 
@@ -339,7 +346,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title' | 'content' | 'tagIds'>>;
   createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'name'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, '_id'>>;
-  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'tagIds'>>;
+  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'title' | 'content' | 'tagIds'>>;
 }>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
@@ -370,6 +377,7 @@ export type PostResultResolvers<ContextType = any, ParentType extends ResolversP
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
+  getPostsByTags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetPostsByTagsArgs, 'tagIds'>>;
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
   search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, never>>;

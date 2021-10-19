@@ -28,8 +28,47 @@ const resolvers: Resolvers = {
       }
       return data;
     },
+    async getPostsByTags(parent, args, context) {
+      const { tagIds } = args;
+      let mongoQueryValue;
+
+      // We need to use <arrayField: element> expression when tagIds has ONE element
+      if (tagIds.length <= 1 && tagIds[0]) {
+        const tagObjectId = new ObjectId(tagIds[0]);
+        mongoQueryValue = tagObjectId;
+      } else {
+        // Use $all expression to query multiple tagIds
+        const tagObjectIds: ObjectId[] = [];
+        tagIds.forEach(id => {
+          if (!id) return;
+          const objId = new ObjectId(id);
+          tagObjectIds.push(objId);
+        });
+        mongoQueryValue = { $all: tagObjectIds };
+      }
+
+      const data = await context.db
+        .collection("posts")
+        .find({ tagIds: mongoQueryValue })
+        .toArray();
+
+      if (!data) {
+        throw new NotFoundError("Cannot find posts");
+      }
+      return data;
+    },
     async search(parent, args, context) {
-      const { searchTerm } = args;
+      const { searchTerm, tagIds } = args;
+
+      // Construct objectIds for tagids
+      const tagObjectIds: ObjectId[] = [];
+      if (tagIds) {
+        tagIds.forEach(id => {
+          if (!id) return;
+          tagObjectIds.push(new ObjectId(id));
+        });
+      }
+
       const data = await context.db
         .collection("posts")
         .aggregate([
@@ -48,6 +87,16 @@ const resolvers: Resolvers = {
               }
             }
           },
+          // Include tags stage IF tagIds is provided
+          ...(tagIds
+            ? [
+                {
+                  $match: {
+                    tagIds: { $all: tagObjectIds }
+                  }
+                }
+              ]
+            : []),
           {
             $lookup: {
               from: "users",
