@@ -109,6 +109,14 @@ const resolvers: Resolvers = {
             $unwind: "$authorInfo"
           },
           {
+            $lookup: {
+              from: "tags",
+              localField: "tagIds",
+              foreignField: "_id",
+              as: "tags"
+            }
+          },
+          {
             $project: {
               _id: 1,
               title: 1,
@@ -116,6 +124,8 @@ const resolvers: Resolvers = {
               content: 1,
               author: 1,
               authorInfo: 1,
+              tagIds: 1,
+              tags: 1,
               score: { $meta: "searchScore" },
               highlights: { $meta: "searchHighlights" }
             }
