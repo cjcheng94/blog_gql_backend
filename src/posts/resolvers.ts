@@ -59,11 +59,14 @@ const resolvers: Resolvers = {
     },
     async search(parent, args, context) {
       const { searchTerm, tagIds } = args;
+      const tagObjectIds: ObjectId[] = [];
+
+      // tagIds is valid and not empty
+      const tagIdsNotEmpty = !!tagIds && tagIds.length > 0;
 
       // Construct objectIds for tagids
-      const tagObjectIds: ObjectId[] = [];
-      if (tagIds) {
-        tagIds.forEach(id => {
+      if (tagIdsNotEmpty) {
+        tagIds!.forEach(id => {
           if (!id) return;
           tagObjectIds.push(new ObjectId(id));
         });
@@ -87,8 +90,8 @@ const resolvers: Resolvers = {
               }
             }
           },
-          // Include tags stage IF tagIds is provided
-          ...(tagIds
+          // Include tags stage IF NON-EMPTY tagIds array is provided
+          ...(tagIdsNotEmpty
             ? [
                 {
                   $match: {
