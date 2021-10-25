@@ -42,6 +42,7 @@ export type Mutation = {
   createPost: Post;
   createTag?: Maybe<Tag>;
   deletePost?: Maybe<Post>;
+  deleteTag?: Maybe<Tag>;
   updatePost?: Maybe<Post>;
 };
 
@@ -60,6 +61,11 @@ export type MutationCreateTagArgs = {
 
 export type MutationDeletePostArgs = {
   _id: Scalars['String'];
+};
+
+
+export type MutationDeleteTagArgs = {
+  tagId: Scalars['ID'];
 };
 
 
@@ -346,6 +352,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title' | 'content' | 'tagIds'>>;
   createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'name'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, '_id'>>;
+  deleteTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'tagId'>>;
   updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'title' | 'content' | 'tagIds'>>;
 }>;
 
