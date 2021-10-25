@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { AuthenticationError, ForbiddenError } from "apollo-server";
 import { QueryResolvers, MutationResolvers } from "../gen-types";
 import { WithIndexSignature } from "Utils";
 import { NotFoundError } from "../errors";
@@ -49,6 +50,44 @@ const resolvers: Resolvers = {
         throw new NotFoundError("Cannot find post");
       }
       return newTagData;
+    },
+    async deleteTag(parent, args, context) {
+      const { tagId } = args;
+      const { isAuthed, userData, db } = context;
+      // User not logged in
+      if (!isAuthed) {
+        throw new AuthenticationError("Unauthorized");
+      }
+      // User is not admin
+      const userId = new ObjectId(userData.userId).toHexString();
+      const adminId = new ObjectId(process.env.ADMIN_ID).toHexString();
+      if (userId !== adminId) {
+        throw new ForbiddenError("Forbidden, not admin");
+      }
+      // Get tag object to return later
+      const tagObjectId = new ObjectId(tagId);
+      const tagToDelete = await db
+        .collection("tags")
+        .findOne({ _id: tagObjectId });
+      // Cannot find such a tag
+      if (!tagToDelete) {
+        throw new NotFoundError("Cannot find tag");
+      }
+      // Purge this tag from previously tagged posts
+      await db
+        .collection("posts")
+        .updateMany(
+          { tagIds: tagObjectId },
+          { $pull: { tagIds: tagObjectId } }
+        );
+      // Delete this tag
+      const dbRes = await db.collection("tags").deleteOne({ _id: tagObjectId });
+      // Operation error(e.g.cant find tag)
+      if (dbRes.deletedCount < 1) {
+        // Effectively INTERNAL_SERVER_ERROR type
+        throw new Error("Internal server error");
+      }
+      return tagToDelete;
     }
   }
 };

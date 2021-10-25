@@ -7,6 +7,7 @@ const typeDefs = gql`
   }
   extend type Mutation {
     createTag(name: String!): Tag
+    deleteTag(tagId: ID!): Tag
   }
   type Tag {
     _id: ID!
