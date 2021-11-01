@@ -33,6 +33,11 @@ const resolvers: Resolvers = {
   Mutation: {
     async createTag(parent, args, context) {
       const { name } = args;
+      const { isAuthed } = context;
+      // User not logged in
+      if (!isAuthed) {
+        throw new AuthenticationError("Unauthorized");
+      }
       const newTag = {
         _id: new ObjectId(),
         name
