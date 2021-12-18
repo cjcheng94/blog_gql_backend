@@ -81,9 +81,7 @@ const resolvers: Resolvers = {
               phrase: {
                 query: searchTerm,
                 slop: 4,
-                path: {
-                  wildcard: "*"
-                }
+                path: "contentText"
               },
               highlight: {
                 path: ["title", "content"]
