@@ -8,11 +8,17 @@ const typeDefs = gql`
     search(searchTerm: String!, tagIds: [ID]): [PostResult]
   }
   extend type Mutation {
-    createPost(title: String!, content: String!, tagIds: [ID]!): Post!
+    createPost(
+      title: String!
+      content: String!
+      contentText: String!
+      tagIds: [ID]!
+    ): Post!
     updatePost(
       _id: String!
       title: String!
       content: String!
+      contentText: String!
       tagIds: [ID]!
     ): Post
     deletePost(_id: String!): Post
@@ -22,6 +28,7 @@ const typeDefs = gql`
     title: String!
     author: String!
     content: String!
+    contentText: String!
     date: String!
     authorInfo: User!
     tags: [Tag]!
