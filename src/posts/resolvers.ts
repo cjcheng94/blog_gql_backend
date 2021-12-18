@@ -140,7 +140,7 @@ const resolvers: Resolvers = {
   },
   Mutation: {
     async createPost(parent, args, context) {
-      const { title, content, tagIds } = args;
+      const { title, content, contentText, tagIds } = args;
       const { isAuthed, userData } = context;
       // User not logged in
       if (!isAuthed) {
@@ -151,6 +151,7 @@ const resolvers: Resolvers = {
       const newPost = {
         title,
         content,
+        contentText,
         tagIds: tagObjectIds,
         _id: new ObjectId(),
         author: new ObjectId(userData.userId),
@@ -172,7 +173,7 @@ const resolvers: Resolvers = {
     },
 
     async updatePost(parent, args, context) {
-      const { _id, title, content, tagIds } = args;
+      const { _id, title, content, contentText, tagIds } = args;
       const { isAuthed, userData, db } = context;
       // User not logged in
       if (!isAuthed) {
@@ -199,7 +200,7 @@ const resolvers: Resolvers = {
         .collection("posts")
         .updateOne(
           { _id: objId },
-          { $set: { title, content, tagIds: tagObjectIds } }
+          { $set: { title, content, contentText, tagIds: tagObjectIds } }
         );
       // Operation error
       if (dbRes.matchedCount !== 1 || dbRes.modifiedCount !== 1) {
