@@ -201,7 +201,7 @@ const resolvers: Resolvers = {
           { $set: { title, content, contentText, tagIds: tagObjectIds } }
         );
       // Operation error
-      if (dbRes.matchedCount !== 1 || dbRes.modifiedCount !== 1) {
+      if (dbRes.matchedCount !== 1) {
         // Effectively INTERNAL_SERVER_ERROR type
         throw new Error("Internal server error");
       }
