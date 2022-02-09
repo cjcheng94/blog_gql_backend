@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import * as posts from "./posts";
 import * as users from "./users";
 import * as tags from "./tags";
+import * as drafts from "./drafts";
 
 dotenv.config();
 
@@ -15,8 +16,19 @@ const typeDef = gql`
 `;
 
 const schema = makeExecutableSchema({
-  typeDefs: [typeDef, posts.typeDefs, users.typeDefs, tags.typeDefs],
-  resolvers: [posts.resolvers, users.resolvers, tags.resolvers]
+  typeDefs: [
+    typeDef,
+    posts.typeDefs,
+    users.typeDefs,
+    tags.typeDefs,
+    drafts.typeDefs
+  ],
+  resolvers: [
+    posts.resolvers,
+    users.resolvers,
+    tags.resolvers,
+    drafts.resolvers
+  ]
 });
 
 let db: Db | undefined;
