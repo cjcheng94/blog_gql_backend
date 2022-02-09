@@ -23,6 +23,17 @@ export type Scalars = {
 
 
 
+export type Draft = {
+  __typename?: 'Draft';
+  _id: Scalars['ID'];
+  title: Scalars['String'];
+  author: Scalars['String'];
+  content: Scalars['String'];
+  date: Scalars['String'];
+  tags: Array<Maybe<Tag>>;
+  tagIds: Array<Maybe<Scalars['ID']>>;
+};
+
 export type Highlight = {
   __typename?: 'Highlight';
   path?: Maybe<Scalars['String']>;
@@ -39,11 +50,22 @@ export type LoginResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createDraft?: Maybe<Draft>;
   createPost: Post;
   createTag?: Maybe<Tag>;
+  deleteDraft?: Maybe<Draft>;
   deletePost?: Maybe<Post>;
   deleteTag?: Maybe<Tag>;
+  updateDraft?: Maybe<Draft>;
   updatePost?: Maybe<Post>;
+};
+
+
+export type MutationCreateDraftArgs = {
+  title: Scalars['String'];
+  content: Scalars['String'];
+  contentText: Scalars['String'];
+  tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
 
@@ -60,6 +82,11 @@ export type MutationCreateTagArgs = {
 };
 
 
+export type MutationDeleteDraftArgs = {
+  _id: Scalars['String'];
+};
+
+
 export type MutationDeletePostArgs = {
   _id: Scalars['String'];
 };
@@ -67,6 +94,15 @@ export type MutationDeletePostArgs = {
 
 export type MutationDeleteTagArgs = {
   tagId: Scalars['ID'];
+};
+
+
+export type MutationUpdateDraftArgs = {
+  _id: Scalars['String'];
+  title: Scalars['String'];
+  content: Scalars['String'];
+  contentText: Scalars['String'];
+  tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
 
@@ -106,8 +142,10 @@ export type PostResult = {
 
 export type Query = {
   __typename?: 'Query';
+  getDraftById?: Maybe<Draft>;
   getPostById?: Maybe<Post>;
   getPostsByTags?: Maybe<Array<Maybe<Post>>>;
+  getUserDrafts?: Maybe<Array<Maybe<Draft>>>;
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
   posts?: Maybe<Array<Maybe<Post>>>;
   search?: Maybe<Array<Maybe<PostResult>>>;
@@ -117,6 +155,11 @@ export type Query = {
   userLogin?: Maybe<LoginResponse>;
   userSignup?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryGetDraftByIdArgs = {
+  _id: Scalars['String'];
 };
 
 
@@ -265,11 +308,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Highlight: ResolverTypeWrapper<Highlight>;
+  Draft: ResolverTypeWrapper<Draft>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Highlight: ResolverTypeWrapper<Highlight>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
   Mutation: ResolverTypeWrapper<{}>;
   Post: ResolverTypeWrapper<Post>;
   PostResult: ResolverTypeWrapper<PostResult>;
@@ -284,11 +328,12 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Highlight: Highlight;
+  Draft: Draft;
+  ID: Scalars['ID'];
   String: Scalars['String'];
+  Highlight: Highlight;
   Float: Scalars['Float'];
   LoginResponse: LoginResponse;
-  ID: Scalars['ID'];
   Mutation: {};
   Post: Post;
   PostResult: PostResult;
@@ -336,6 +381,17 @@ export type MapDirectiveArgs = {   path: Scalars['String']; };
 
 export type MapDirectiveResolver<Result, Parent, ContextType = any, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type DraftResolvers<ContextType = any, ParentType extends ResolversParentTypes['Draft'] = ResolversParentTypes['Draft']> = ResolversObject<{
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
+  tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type HighlightResolvers<ContextType = any, ParentType extends ResolversParentTypes['Highlight'] = ResolversParentTypes['Highlight']> = ResolversObject<{
   path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   texts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Text']>>>, ParentType, ContextType>;
@@ -351,10 +407,13 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationCreateDraftArgs, 'title' | 'content' | 'contentText' | 'tagIds'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title' | 'content' | 'contentText' | 'tagIds'>>;
   createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'name'>>;
+  deleteDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationDeleteDraftArgs, '_id'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, '_id'>>;
   deleteTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'tagId'>>;
+  updateDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationUpdateDraftArgs, '_id' | 'title' | 'content' | 'contentText' | 'tagIds'>>;
   updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'title' | 'content' | 'contentText' | 'tagIds'>>;
 }>;
 
@@ -385,8 +444,10 @@ export type PostResultResolvers<ContextType = any, ParentType extends ResolversP
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  getDraftById?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<QueryGetDraftByIdArgs, '_id'>>;
   getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
   getPostsByTags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetPostsByTagsArgs, 'tagIds'>>;
+  getUserDrafts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Draft']>>>, ParentType, ContextType>;
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
   search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'searchTerm'>>;
@@ -421,6 +482,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Draft?: DraftResolvers<ContextType>;
   Highlight?: HighlightResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
