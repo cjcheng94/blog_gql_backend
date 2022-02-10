@@ -47,6 +47,7 @@ const typeDefs = gql`
     title: String!
     author: String!
     content: String!
+    contentText: String!
     date: String!
     score: Float
     authorInfo: User!
