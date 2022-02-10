@@ -26,6 +26,7 @@ const typeDefs = gql`
     title: String!
     author: String!
     content: String!
+    contentText: String!
     date: String!
     tags: [Tag]!
     tagIds: [ID]!
