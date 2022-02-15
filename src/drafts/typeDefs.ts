@@ -7,6 +7,7 @@ const typeDefs = gql`
   }
   extend type Mutation {
     createDraft(
+      postId: ID
       title: String!
       content: String!
       contentText: String!
@@ -14,6 +15,7 @@ const typeDefs = gql`
     ): Draft
     updateDraft(
       _id: String!
+      postId: ID
       title: String!
       content: String!
       contentText: String!
@@ -23,6 +25,7 @@ const typeDefs = gql`
   }
   type Draft {
     _id: ID!
+    postId: ID
     title: String!
     author: String!
     content: String!

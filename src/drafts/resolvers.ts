@@ -69,7 +69,7 @@ const resolvers: Resolvers = {
   },
   Mutation: {
     async createDraft(parent, args, context) {
-      const { title, content, contentText, tagIds } = args;
+      const { postId, title, content, contentText, tagIds } = args;
       const { db, isAuthed, userData } = context;
 
       // User not logged in
@@ -80,6 +80,7 @@ const resolvers: Resolvers = {
       // Construct new Draft object
       const tagObjectIds = tagIds.map(tag => new ObjectId(tag as string));
       const newDraft = {
+        postId: postId ? new ObjectId(postId) : null,
         title,
         content,
         contentText,
@@ -109,7 +110,7 @@ const resolvers: Resolvers = {
       return newDraftData;
     },
     async updateDraft(parent, args, context) {
-      const { _id, title, content, contentText, tagIds } = args;
+      const { _id, postId, title, content, contentText, tagIds } = args;
       const { db, isAuthed, userData } = context;
 
       // User not logged in
@@ -141,6 +142,7 @@ const resolvers: Resolvers = {
         { _id: objId },
         {
           $set: {
+            postId: postId ? new ObjectId(postId) : null,
             title,
             content,
             contentText,
