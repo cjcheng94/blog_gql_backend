@@ -26,9 +26,11 @@ export type Scalars = {
 export type Draft = {
   __typename?: 'Draft';
   _id: Scalars['ID'];
+  postId?: Maybe<Scalars['ID']>;
   title: Scalars['String'];
   author: Scalars['String'];
   content: Scalars['String'];
+  contentText: Scalars['String'];
   date: Scalars['String'];
   tags: Array<Maybe<Tag>>;
   tagIds: Array<Maybe<Scalars['ID']>>;
@@ -62,6 +64,7 @@ export type Mutation = {
 
 
 export type MutationCreateDraftArgs = {
+  postId?: Maybe<Scalars['ID']>;
   title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
@@ -99,6 +102,7 @@ export type MutationDeleteTagArgs = {
 
 export type MutationUpdateDraftArgs = {
   _id: Scalars['String'];
+  postId?: Maybe<Scalars['ID']>;
   title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
@@ -132,6 +136,7 @@ export type PostResult = {
   title: Scalars['String'];
   author: Scalars['String'];
   content: Scalars['String'];
+  contentText: Scalars['String'];
   date: Scalars['String'];
   score?: Maybe<Scalars['Float']>;
   authorInfo: User;
@@ -383,9 +388,11 @@ export type MapDirectiveResolver<Result, Parent, ContextType = any, Args = MapDi
 
 export type DraftResolvers<ContextType = any, ParentType extends ResolversParentTypes['Draft'] = ResolversParentTypes['Draft']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  postId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
   tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
@@ -434,6 +441,7 @@ export type PostResultResolvers<ContextType = any, ParentType extends ResolversP
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
