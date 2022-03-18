@@ -124,6 +124,7 @@ export type Post = {
   title: Scalars['String'];
   author: Scalars['String'];
   content: Scalars['String'];
+  contentText: Scalars['String'];
   date: Scalars['String'];
   authorInfo: User;
   tags: Array<Maybe<Tag>>;
@@ -429,6 +430,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
