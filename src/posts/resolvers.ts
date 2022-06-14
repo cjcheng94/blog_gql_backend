@@ -123,6 +123,7 @@ const resolvers: Resolvers = {
               title: 1,
               date: 1,
               content: 1,
+              contentText: 1,
               author: 1,
               authorInfo: 1,
               tagIds: 1,
