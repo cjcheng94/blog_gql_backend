@@ -28,14 +28,14 @@ const resolvers: Resolvers = {
   },
   Mutation: {
     async createImage(parent, args, context) {
-      const { _id, caption } = args;
+      const { caption } = args;
       const { isAuthed, db } = context;
       // User not logged in
       if (!isAuthed) {
         throw new AuthenticationError("Unauthorized");
       }
       const newImage = {
-        _id: new ObjectId(_id),
+        _id: new ObjectId(),
         caption
       };
       const dbRes = await db.collection("images").insertOne(newImage);
