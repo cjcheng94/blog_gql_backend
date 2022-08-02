@@ -1,5 +1,5 @@
 overwrite: true
-schema: ["src/posts/typeDefs.ts", "src/users/typeDefs.ts", "src/tags/typeDefs.ts","src/drafts/typeDefs.ts"]
+schema: ["src/posts/typeDefs.ts", "src/users/typeDefs.ts", "src/tags/typeDefs.ts","src/drafts/typeDefs.ts","src/images/typeDefs.ts"]
 documents: null
 generates:
   src/gen-types.d.ts:
