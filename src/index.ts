@@ -7,6 +7,7 @@ import * as posts from "./posts";
 import * as users from "./users";
 import * as tags from "./tags";
 import * as drafts from "./drafts";
+import * as images from "./images";
 
 dotenv.config();
 
@@ -21,13 +22,15 @@ const schema = makeExecutableSchema({
     posts.typeDefs,
     users.typeDefs,
     tags.typeDefs,
-    drafts.typeDefs
+    drafts.typeDefs,
+    images.typeDefs
   ],
   resolvers: [
     posts.resolvers,
     users.resolvers,
     tags.resolvers,
-    drafts.resolvers
+    drafts.resolvers,
+    images.resolvers
   ]
 });
 
