@@ -140,7 +140,13 @@ const resolvers: Resolvers = {
   Mutation: {
     async createPost(parent, args, context) {
       const { title, content, contentText, tagIds } = args;
-      const { isAuthed, userData } = context;
+      const { isAuthed, isAdmin, userData } = context;
+
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
+      }
+
       // User not logged in
       if (!isAuthed) {
         throw new AuthenticationError("Unauthorized");

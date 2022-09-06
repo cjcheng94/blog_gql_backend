@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { AuthenticationError } from "apollo-server";
+import { AuthenticationError, ForbiddenError } from "apollo-server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { QueryResolvers } from "../gen-types";
@@ -14,6 +14,11 @@ interface Resolvers extends WithIndexSignature {
 const resolvers: Resolvers = {
   Query: {
     async users(parent, args, context) {
+      const { isAdmin } = context;
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
+      }
       const data = await context.db
         .collection("users")
         .find()
@@ -23,6 +28,12 @@ const resolvers: Resolvers = {
 
     async user(parent, args, context) {
       const { username } = args;
+      const { isAdmin } = context;
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
+      }
+
       const data = await context.db.collection("users").findOne({ username });
       // cannot find user
       if (!data) {
@@ -58,6 +69,11 @@ const resolvers: Resolvers = {
     },
 
     async userSignup(parent, args, context) {
+      // Stop taking new users
+      throw new ForbiddenError(
+        "Sorry, we are not accepting new users at the moment"
+      );
+
       const { username, password } = args;
       const { db } = context;
       // Query username for duplicates

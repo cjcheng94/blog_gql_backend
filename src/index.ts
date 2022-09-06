@@ -1,6 +1,6 @@
 import { ApolloServer, gql } from "apollo-server";
 import { makeExecutableSchema } from "graphql-tools";
-import { MongoClient, Db } from "mongodb";
+import { MongoClient, Db, ObjectId } from "mongodb";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import * as posts from "./posts";
@@ -10,6 +10,13 @@ import * as drafts from "./drafts";
 import * as images from "./images";
 
 dotenv.config();
+
+type DecodedToken = {
+  username: string;
+  userId: string;
+  iat: number;
+  exp: number;
+};
 
 const typeDef = gql`
   type Query
@@ -53,19 +60,26 @@ const apolloServer = new ApolloServer({
     let token = "";
     let userData = null;
     let isAuthed = false;
+    let isAdmin = false;
 
     if (req.headers.authorization) {
       token = req.headers.authorization.split(" ")[1];
       try {
-        const decoded = jwt.verify(token, process.env.JWT_KEY as string);
+        const decoded = <DecodedToken>(
+          jwt.verify(token, process.env.JWT_KEY as string)
+        );
         isAuthed = true;
         userData = decoded;
+
+        const userId = new ObjectId(userData.userId).toHexString();
+        const adminId = new ObjectId(process.env.ADMIN_ID).toHexString();
+        isAdmin = userId === adminId;
       } catch (err) {
         console.log("Auth failed");
       }
     }
 
-    return { db, isAuthed, userData };
+    return { db, userData, isAuthed, isAdmin };
   },
   formatResponse: (response, requestContext) => {
     if (
