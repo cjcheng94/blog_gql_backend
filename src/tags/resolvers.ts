@@ -33,11 +33,12 @@ const resolvers: Resolvers = {
   Mutation: {
     async createTag(parent, args, context) {
       const { name } = args;
-      const { isAuthed } = context;
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
+      const { isAdmin } = context;
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
       }
+
       const newTag = {
         _id: new ObjectId(),
         name
@@ -58,17 +59,13 @@ const resolvers: Resolvers = {
     },
     async deleteTag(parent, args, context) {
       const { tagId } = args;
-      const { isAuthed, userData, db } = context;
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
-      }
-      // User is not admin
-      const userId = new ObjectId(userData.userId).toHexString();
-      const adminId = new ObjectId(process.env.ADMIN_ID).toHexString();
-      if (userId !== adminId) {
+      const { isAdmin, db } = context;
+
+      // Admin-only
+      if (!isAdmin) {
         throw new ForbiddenError("Forbidden, not admin");
       }
+
       // Get tag object to return later
       const tagObjectId = new ObjectId(tagId);
       const tagToDelete = await db

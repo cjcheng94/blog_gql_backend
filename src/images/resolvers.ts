@@ -29,10 +29,10 @@ const resolvers: Resolvers = {
   Mutation: {
     async createImage(parent, args, context) {
       const { caption } = args;
-      const { isAuthed, db } = context;
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
+      const { isAdmin, db } = context;
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
       }
       const newImage = {
         _id: new ObjectId(),
@@ -54,16 +54,10 @@ const resolvers: Resolvers = {
     },
     async updateImage(parent, args, context) {
       const { _id, caption } = args;
-      const { isAuthed, userData, db } = context;
+      const { isAdmin, userData, db } = context;
 
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
-      }
-      // User is not admin
-      const userId = new ObjectId(userData.userId).toHexString();
-      const adminId = new ObjectId(process.env.ADMIN_ID).toHexString();
-      if (userId !== adminId) {
+      // Admin-only
+      if (!isAdmin) {
         throw new ForbiddenError("Forbidden, not admin");
       }
 
@@ -100,16 +94,10 @@ const resolvers: Resolvers = {
     },
     async deleteImage(parent, args, context) {
       const { _id } = args;
-      const { isAuthed, userData, db } = context;
+      const { isAdmin, userData, db } = context;
 
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
-      }
-      // User is not admin
-      const userId = new ObjectId(userData.userId).toHexString();
-      const adminId = new ObjectId(process.env.ADMIN_ID).toHexString();
-      if (userId !== adminId) {
+      // Admin-only
+      if (!isAdmin) {
         throw new ForbiddenError("Forbidden, not admin");
       }
 
