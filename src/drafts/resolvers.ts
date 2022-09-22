@@ -18,11 +18,11 @@ const resolvers: Resolvers = {
   Query: {
     async getDraftById(parent, args, context) {
       const { _id } = args;
-      const { db, isAuthed, userData } = context;
+      const { db, isAdmin, userData } = context;
 
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
       }
 
       // Find Draft
@@ -44,11 +44,11 @@ const resolvers: Resolvers = {
       return data;
     },
     async getUserDrafts(parent, args, context) {
-      const { db, isAuthed, userData } = context;
+      const { db, isAdmin, userData } = context;
 
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
       }
 
       // Get User Id
@@ -65,16 +65,43 @@ const resolvers: Resolvers = {
       }
 
       return data;
+    },
+    async getDraftByPostId(parent, args, context) {
+      const { postId } = args;
+      const { db, isAdmin, userData } = context;
+
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
+      }
+
+      // Find Draft
+      const postObjId = new ObjectId(postId);
+      const data = await db.collection("drafts").findOne({ postId: postObjId });
+
+      if (!data) {
+        throw new NotFoundError("Cannot find draft");
+      }
+
+      // Check User Credentials
+      const userId = new ObjectId(userData.userId).toHexString();
+      const draftOwnerId = data.author.toHexString();
+
+      if (userId !== draftOwnerId) {
+        throw new ForbiddenError("Forbidden, not your draft");
+      }
+
+      return data;
     }
   },
   Mutation: {
     async createDraft(parent, args, context) {
       const { postId, title, content, contentText, tagIds } = args;
-      const { db, isAuthed, userData } = context;
+      const { db, isAdmin, userData } = context;
 
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
       }
 
       // Construct new Draft object
@@ -111,13 +138,12 @@ const resolvers: Resolvers = {
     },
     async updateDraft(parent, args, context) {
       const { _id, postId, title, content, contentText, tagIds } = args;
-      const { db, isAuthed, userData } = context;
+      const { db, isAdmin, userData } = context;
 
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
       }
-
       // Find to-be-updated draft by id and its owner
       const objId = new ObjectId(_id);
       const draftToUpdate = await db
@@ -173,11 +199,11 @@ const resolvers: Resolvers = {
     },
     async deleteDraft(parent, args, context) {
       const { _id } = args;
-      const { db, isAuthed, userData } = context;
+      const { db, isAdmin, userData } = context;
 
-      // User not logged in
-      if (!isAuthed) {
-        throw new AuthenticationError("Unauthorized");
+      // Admin-only
+      if (!isAdmin) {
+        throw new ForbiddenError("Forbidden, not admin");
       }
 
       const objId = new ObjectId(_id);
