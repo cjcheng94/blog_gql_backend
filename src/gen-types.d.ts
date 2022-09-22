@@ -174,6 +174,7 @@ export type PostResult = {
 export type Query = {
   __typename?: 'Query';
   getDraftById?: Maybe<Draft>;
+  getDraftByPostId?: Maybe<Draft>;
   getPostById?: Maybe<Post>;
   getPostsByTags?: Maybe<Array<Maybe<Post>>>;
   getUserDrafts?: Maybe<Array<Maybe<Draft>>>;
@@ -192,6 +193,11 @@ export type Query = {
 
 export type QueryGetDraftByIdArgs = {
   _id: Scalars['String'];
+};
+
+
+export type QueryGetDraftByPostIdArgs = {
+  postId: Scalars['ID'];
 };
 
 
@@ -497,6 +503,7 @@ export type PostResultResolvers<ContextType = any, ParentType extends ResolversP
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   getDraftById?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<QueryGetDraftByIdArgs, '_id'>>;
+  getDraftByPostId?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<QueryGetDraftByPostIdArgs, 'postId'>>;
   getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
   getPostsByTags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetPostsByTagsArgs, 'tagIds'>>;
   getUserDrafts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Draft']>>>, ParentType, ContextType>;
