@@ -3,6 +3,7 @@ import { gql } from "apollo-server";
 const typeDefs = gql`
   extend type Query {
     getDraftById(_id: String!): Draft
+    getDraftByPostId(postId: ID!): Draft
     getUserDrafts: [Draft]
   }
   extend type Mutation {
