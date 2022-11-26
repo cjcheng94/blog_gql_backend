@@ -128,6 +128,7 @@ const resolvers: Resolvers = {
               authorInfo: 1,
               tagIds: 1,
               tags: 1,
+              thumbnailUrl: 1,
               score: { $meta: "searchScore" },
               highlights: { $meta: "searchHighlights" }
             }
@@ -139,7 +140,7 @@ const resolvers: Resolvers = {
   },
   Mutation: {
     async createPost(parent, args, context) {
-      const { title, content, contentText, tagIds } = args;
+      const { title, content, contentText, tagIds, thumbnailUrl } = args;
       const { isAuthed, isAdmin, userData } = context;
 
       // Admin-only
@@ -157,6 +158,7 @@ const resolvers: Resolvers = {
         title,
         content,
         contentText,
+        thumbnailUrl,
         tagIds: tagObjectIds,
         _id: new ObjectId(),
         author: new ObjectId(userData.userId),
@@ -178,7 +180,7 @@ const resolvers: Resolvers = {
     },
 
     async updatePost(parent, args, context) {
-      const { _id, title, content, contentText, tagIds } = args;
+      const { _id, title, content, contentText, tagIds, thumbnailUrl } = args;
       const { isAuthed, userData, db } = context;
       // User not logged in
       if (!isAuthed) {
@@ -201,12 +203,18 @@ const resolvers: Resolvers = {
       }
       const tagObjectIds = tagIds.map(tag => new ObjectId(tag as string));
       // update post
-      const dbRes = await db
-        .collection("posts")
-        .updateOne(
-          { _id: objId },
-          { $set: { title, content, contentText, tagIds: tagObjectIds } }
-        );
+      const dbRes = await db.collection("posts").updateOne(
+        { _id: objId },
+        {
+          $set: {
+            title,
+            content,
+            contentText,
+            thumbnailUrl,
+            tagIds: tagObjectIds
+          }
+        }
+      );
       // Operation error
       if (dbRes.matchedCount !== 1) {
         // Effectively INTERNAL_SERVER_ERROR type
