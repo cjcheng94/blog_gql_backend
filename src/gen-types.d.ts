@@ -90,6 +90,7 @@ export type MutationCreatePostArgs = {
   title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
+  thumbnailUrl?: Maybe<Scalars['String']>;
   tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
@@ -140,6 +141,7 @@ export type MutationUpdatePostArgs = {
   title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
+  thumbnailUrl?: Maybe<Scalars['String']>;
   tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
@@ -154,6 +156,7 @@ export type Post = {
   authorInfo: User;
   tags: Array<Maybe<Tag>>;
   tagIds: Array<Maybe<Scalars['ID']>>;
+  thumbnailUrl?: Maybe<Scalars['String']>;
 };
 
 export type PostResult = {
@@ -169,6 +172,7 @@ export type PostResult = {
   tags: Array<Maybe<Tag>>;
   tagIds: Array<Maybe<Scalars['ID']>>;
   highlights?: Maybe<Array<Maybe<Highlight>>>;
+  thumbnailUrl?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -483,6 +487,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
   tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
+  thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -498,6 +503,7 @@ export type PostResultResolvers<ContextType = any, ParentType extends ResolversP
   tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
   tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
   highlights?: Resolver<Maybe<Array<Maybe<ResolversTypes['Highlight']>>>, ParentType, ContextType>;
+  thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
