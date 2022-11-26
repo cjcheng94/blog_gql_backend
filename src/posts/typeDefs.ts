@@ -12,6 +12,7 @@ const typeDefs = gql`
       title: String!
       content: String!
       contentText: String!
+      thumbnailUrl: String
       tagIds: [ID]!
     ): Post!
     updatePost(
@@ -19,6 +20,7 @@ const typeDefs = gql`
       title: String!
       content: String!
       contentText: String!
+      thumbnailUrl: String
       tagIds: [ID]!
     ): Post
     deletePost(_id: String!): Post
@@ -33,6 +35,7 @@ const typeDefs = gql`
     authorInfo: User!
     tags: [Tag]!
     tagIds: [ID]!
+    thumbnailUrl: String
   }
   type Text {
     value: String
@@ -55,6 +58,7 @@ const typeDefs = gql`
     tags: [Tag]!
     tagIds: [ID]!
     highlights: [Highlight]
+    thumbnailUrl: String
   }
 `;
 
