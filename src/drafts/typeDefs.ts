@@ -12,6 +12,7 @@ const typeDefs = gql`
       title: String!
       content: String!
       contentText: String!
+      thumbnailUrl: String
       tagIds: [ID]!
     ): Draft
     updateDraft(
@@ -20,6 +21,7 @@ const typeDefs = gql`
       title: String!
       content: String!
       contentText: String!
+      thumbnailUrl: String
       tagIds: [ID]!
     ): Draft
     deleteDraft(_id: String!): Draft
@@ -31,6 +33,7 @@ const typeDefs = gql`
     author: String!
     content: String!
     contentText: String!
+    thumbnailUrl: String
     date: String!
     tags: [Tag]!
     tagIds: [ID]!

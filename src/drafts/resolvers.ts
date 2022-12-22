@@ -96,7 +96,14 @@ const resolvers: Resolvers = {
   },
   Mutation: {
     async createDraft(parent, args, context) {
-      const { postId, title, content, contentText, tagIds } = args;
+      const {
+        postId,
+        title,
+        content,
+        contentText,
+        tagIds,
+        thumbnailUrl
+      } = args;
       const { db, isAdmin, userData } = context;
 
       // Admin-only
@@ -111,6 +118,7 @@ const resolvers: Resolvers = {
         title,
         content,
         contentText,
+        thumbnailUrl,
         tagIds: tagObjectIds,
         _id: new ObjectId(),
         author: new ObjectId(userData.userId),
@@ -137,7 +145,15 @@ const resolvers: Resolvers = {
       return newDraftData;
     },
     async updateDraft(parent, args, context) {
-      const { _id, postId, title, content, contentText, tagIds } = args;
+      const {
+        _id,
+        postId,
+        title,
+        content,
+        contentText,
+        tagIds,
+        thumbnailUrl
+      } = args;
       const { db, isAdmin, userData } = context;
 
       // Admin-only
@@ -172,6 +188,7 @@ const resolvers: Resolvers = {
             title,
             content,
             contentText,
+            thumbnailUrl,
             tagIds: tagObjectIds,
             date: new Date().toISOString()
           }
