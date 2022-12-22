@@ -31,6 +31,7 @@ export type Draft = {
   author: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
+  thumbnailUrl?: Maybe<Scalars['String']>;
   date: Scalars['String'];
   tags: Array<Maybe<Tag>>;
   tagIds: Array<Maybe<Scalars['ID']>>;
@@ -77,6 +78,7 @@ export type MutationCreateDraftArgs = {
   title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
+  thumbnailUrl?: Maybe<Scalars['String']>;
   tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
@@ -126,6 +128,7 @@ export type MutationUpdateDraftArgs = {
   title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
+  thumbnailUrl?: Maybe<Scalars['String']>;
   tagIds: Array<Maybe<Scalars['ID']>>;
 };
 
@@ -437,6 +440,7 @@ export type DraftResolvers<ContextType = any, ParentType extends ResolversParent
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
   tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
