@@ -1,4 +1,6 @@
-import { ApolloServer, gql } from "apollo-server";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import gql from "graphql-tag";
 import { makeExecutableSchema } from "graphql-tools";
 import { MongoClient, Db, ObjectId } from "mongodb";
 import dotenv from "dotenv";
@@ -42,8 +44,25 @@ const schema = makeExecutableSchema({
 });
 
 let db: Db | undefined;
-const apolloServer = new ApolloServer({
-  schema,
+const server = new ApolloServer({
+  typeDefs: [
+    typeDef,
+    posts.typeDefs,
+    users.typeDefs,
+    tags.typeDefs,
+    drafts.typeDefs,
+    images.typeDefs
+  ],
+  resolvers: [
+    posts.resolvers,
+    users.resolvers,
+    tags.resolvers,
+    drafts.resolvers,
+    images.resolvers
+  ]
+});
+
+const { url } = await startStandaloneServer(server, {
   context: async ({ req }) => {
     // Connect to database
     if (!db) {
@@ -81,24 +100,7 @@ const apolloServer = new ApolloServer({
 
     return { db, userData, isAuthed, isAdmin };
   },
-  formatResponse: (response, requestContext) => {
-    if (
-      !requestContext.response ||
-      !requestContext.response.http ||
-      !requestContext.operation
-    ) {
-      return null;
-    }
-    // Add X-Is-Cacheable header to "query" type requests
-    const isCacheable = requestContext.operation.operation === "query";
-    if (isCacheable) {
-      requestContext.response.http.headers.set("X-Is-Cacheable", "true");
-      return response;
-    }
-    return null;
-  }
+  listen: { port: 4000 }
 });
 
-apolloServer.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+console.log(`🚀  Server ready at ${url}`);
