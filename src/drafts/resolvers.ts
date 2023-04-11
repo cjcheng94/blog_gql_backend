@@ -1,20 +1,21 @@
 import { ObjectId } from "mongodb";
-import { AuthenticationError, ForbiddenError } from "apollo-server";
+import { NotFoundError, ForbiddenError } from "../errors/index.js";
+import { IResolvers } from "graphql-tools";
+import { WithIndex } from "../../typings/typings.js";
 import {
   QueryResolvers,
   MutationResolvers,
-  DraftResolvers
+  DraftResolvers,
+  Draft,
+  Tag
 } from "../gen-types";
-import { WithIndexSignature } from "Utils";
-import { NotFoundError } from "../errors";
-
-interface Resolvers extends WithIndexSignature {
+interface Resolvers {
   Query: QueryResolvers;
   Mutation: MutationResolvers;
   Draft: DraftResolvers;
 }
 
-const resolvers: Resolvers = {
+const resolvers: WithIndex<IResolvers & Resolvers> = {
   Query: {
     async getDraftById(parent, args, context) {
       const { _id } = args;
@@ -41,7 +42,7 @@ const resolvers: Resolvers = {
         throw new ForbiddenError("Forbidden, not your draft");
       }
 
-      return data;
+      return data as Draft;
     },
     async getUserDrafts(parent, args, context) {
       const { db, isAdmin, userData } = context;
@@ -64,7 +65,7 @@ const resolvers: Resolvers = {
         throw new NotFoundError("Cannot find draft");
       }
 
-      return data;
+      return data as Draft[];
     },
     async getDraftByPostId(parent, args, context) {
       const { postId } = args;
@@ -91,19 +92,13 @@ const resolvers: Resolvers = {
         throw new ForbiddenError("Forbidden, not your draft");
       }
 
-      return data;
+      return data as Draft;
     }
   },
   Mutation: {
     async createDraft(parent, args, context) {
-      const {
-        postId,
-        title,
-        content,
-        contentText,
-        tagIds,
-        thumbnailUrl
-      } = args;
+      const { postId, title, content, contentText, tagIds, thumbnailUrl } =
+        args;
       const { db, isAdmin, userData } = context;
 
       // Admin-only
@@ -142,18 +137,11 @@ const resolvers: Resolvers = {
         throw new NotFoundError("Cannot find draft");
       }
 
-      return newDraftData;
+      return newDraftData as Draft;
     },
     async updateDraft(parent, args, context) {
-      const {
-        _id,
-        postId,
-        title,
-        content,
-        contentText,
-        tagIds,
-        thumbnailUrl
-      } = args;
+      const { _id, postId, title, content, contentText, tagIds, thumbnailUrl } =
+        args;
       const { db, isAdmin, userData } = context;
 
       // Admin-only
@@ -212,7 +200,7 @@ const resolvers: Resolvers = {
       }
 
       // All done, return updated draft
-      return updatedDraft;
+      return updatedDraft as Draft;
     },
     async deleteDraft(parent, args, context) {
       const { _id } = args;
@@ -250,7 +238,7 @@ const resolvers: Resolvers = {
       }
 
       // Deleted successfully
-      return draftToDelete;
+      return draftToDelete as Draft;
     }
   },
   Draft: {
@@ -267,7 +255,7 @@ const resolvers: Resolvers = {
               .findOne({ _id: new ObjectId(tagId as string) })
         )
       );
-      return tagObjects;
+      return tagObjects as Tag[];
     }
   }
 };
