@@ -5,7 +5,9 @@ import { WithIndex } from "../../typings/typings.js";
 import {
   QueryResolvers,
   MutationResolvers,
-  DraftResolvers
+  DraftResolvers,
+  Draft,
+  Tag
 } from "../gen-types";
 interface Resolvers {
   Query: QueryResolvers;
@@ -40,7 +42,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
         throw new ForbiddenError("Forbidden, not your draft");
       }
 
-      return data;
+      return data as Draft;
     },
     async getUserDrafts(parent, args, context) {
       const { db, isAdmin, userData } = context;
@@ -63,7 +65,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
         throw new NotFoundError("Cannot find draft");
       }
 
-      return data;
+      return data as Draft[];
     },
     async getDraftByPostId(parent, args, context) {
       const { postId } = args;
@@ -90,7 +92,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
         throw new ForbiddenError("Forbidden, not your draft");
       }
 
-      return data;
+      return data as Draft;
     }
   },
   Mutation: {
@@ -135,7 +137,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
         throw new NotFoundError("Cannot find draft");
       }
 
-      return newDraftData;
+      return newDraftData as Draft;
     },
     async updateDraft(parent, args, context) {
       const { _id, postId, title, content, contentText, tagIds, thumbnailUrl } =
@@ -198,7 +200,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
       }
 
       // All done, return updated draft
-      return updatedDraft;
+      return updatedDraft as Draft;
     },
     async deleteDraft(parent, args, context) {
       const { _id } = args;
@@ -236,7 +238,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
       }
 
       // Deleted successfully
-      return draftToDelete;
+      return draftToDelete as Draft;
     }
   },
   Draft: {
@@ -253,7 +255,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
               .findOne({ _id: new ObjectId(tagId as string) })
         )
       );
-      return tagObjects;
+      return tagObjects as Tag[];
     }
   }
 };

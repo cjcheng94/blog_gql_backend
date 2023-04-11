@@ -14,6 +14,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   Token: any;
+  Void: any;
 };
 
 export type Draft = {
@@ -160,7 +161,7 @@ export type Query = {
   tags?: Maybe<Array<Maybe<Tag>>>;
   user?: Maybe<User>;
   userLogin?: Maybe<LoginResponse>;
-  userSignup?: Maybe<User>;
+  userSignup?: Maybe<Scalars['Void']>;
   users?: Maybe<Array<Maybe<User>>>;
 };
 
@@ -326,6 +327,7 @@ export type ResolversTypes = ResolversObject<{
   Text: ResolverTypeWrapper<Text>;
   Token: ResolverTypeWrapper<Scalars['Token']>;
   User: ResolverTypeWrapper<User>;
+  Void: ResolverTypeWrapper<Scalars['Void']>;
   AdditionalEntityFields: AdditionalEntityFields;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 }>;
@@ -346,6 +348,7 @@ export type ResolversParentTypes = ResolversObject<{
   Text: Text;
   Token: Scalars['Token'];
   User: User;
+  Void: Scalars['Void'];
   AdditionalEntityFields: AdditionalEntityFields;
   Boolean: Scalars['Boolean'];
 }>;
@@ -479,7 +482,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUserArgs>>;
   userLogin?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'password' | 'username'>>;
-  userSignup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'password' | 'username'>>;
+  userSignup?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'password' | 'username'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
 }>;
 
@@ -505,6 +508,10 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
+  name: 'Void';
+}
+
 export type Resolvers<ContextType = Context> = ResolversObject<{
   Draft?: DraftResolvers<ContextType>;
   Highlight?: HighlightResolvers<ContextType>;
@@ -517,6 +524,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Text?: TextResolvers<ContextType>;
   Token?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
+  Void?: GraphQLScalarType;
 }>;
 
 export type DirectiveResolvers<ContextType = Context> = ResolversObject<{

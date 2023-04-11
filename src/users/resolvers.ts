@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { QueryResolvers } from "../gen-types";
+import { QueryResolvers, User, Post } from "../gen-types";
 import { IResolvers } from "graphql-tools";
 import { WithIndex } from "../../typings/typings.js";
 import {
@@ -25,7 +25,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
       if (!isAdmin) {
         throw new ForbiddenError("Forbidden, not admin");
       }
-      const data = await context.db.collection("users").find().toArray();
+      const data = await context.db.collection<User>("users").find().toArray();
       return data;
     },
 
@@ -37,7 +37,9 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
         throw new ForbiddenError("Forbidden, not admin");
       }
 
-      const data = await context.db.collection("users").findOne({ username });
+      const data = (await context.db
+        .collection("users")
+        .findOne({ username })) as User;
       // cannot find user
       if (!data) {
         throw new NotFoundError("Cannot find user");
@@ -117,7 +119,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
         .collection("posts")
         .find({ author: userObjectId })
         .toArray();
-      return data;
+      return data as Post[];
     }
   }
 };
