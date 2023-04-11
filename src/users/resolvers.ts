@@ -1,17 +1,23 @@
 import { ObjectId } from "mongodb";
-import { AuthenticationError, ForbiddenError } from "apollo-server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { QueryResolvers } from "../gen-types";
-import { WithIndexSignature } from "Utils";
-import { NotFoundError, ConflictError } from "../errors";
+import { IResolvers } from "graphql-tools";
+import { WithIndex } from "../../typings/typings.js";
+import {
+  NotFoundError,
+  ConflictError,
+  AuthenticationError,
+  ForbiddenError
+} from "../errors/index.js";
 import dotenv from "dotenv";
+
 dotenv.config();
-interface Resolvers extends WithIndexSignature {
+interface Resolvers {
   Query: QueryResolvers;
 }
 
-const resolvers: Resolvers = {
+const resolvers: WithIndex<IResolvers & Resolvers> = {
   Query: {
     async users(parent, args, context) {
       const { isAdmin } = context;
@@ -19,10 +25,7 @@ const resolvers: Resolvers = {
       if (!isAdmin) {
         throw new ForbiddenError("Forbidden, not admin");
       }
-      const data = await context.db
-        .collection("users")
-        .find()
-        .toArray();
+      const data = await context.db.collection("users").find().toArray();
       return data;
     },
 

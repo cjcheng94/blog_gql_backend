@@ -1,22 +1,20 @@
 import { ObjectId } from "mongodb";
-import { AuthenticationError, ForbiddenError } from "apollo-server";
 import { QueryResolvers, MutationResolvers } from "../gen-types";
-import { WithIndexSignature } from "Utils";
-import { NotFoundError } from "../errors";
+import { IResolvers } from "graphql-tools";
+import { WithIndex } from "../../typings/typings.js";
+import { NotFoundError, ForbiddenError } from "../errors/index.js";
 import dotenv from "dotenv";
+
 dotenv.config();
-interface Resolvers extends WithIndexSignature {
+interface Resolvers {
   Query: QueryResolvers;
   Mutation: MutationResolvers;
 }
 
-const resolvers: Resolvers = {
+const resolvers: WithIndex<IResolvers & Resolvers> = {
   Query: {
     async tags(parent, args, context) {
-      const data = await context.db
-        .collection("tags")
-        .find()
-        .toArray();
+      const data = await context.db.collection("tags").find().toArray();
       return data;
     },
     async tag(parent, args, context) {

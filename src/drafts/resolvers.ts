@@ -1,20 +1,19 @@
 import { ObjectId } from "mongodb";
-import { AuthenticationError, ForbiddenError } from "apollo-server";
+import { NotFoundError, ForbiddenError } from "../errors/index.js";
+import { IResolvers } from "graphql-tools";
+import { WithIndex } from "../../typings/typings.js";
 import {
   QueryResolvers,
   MutationResolvers,
   DraftResolvers
 } from "../gen-types";
-import { WithIndexSignature } from "Utils";
-import { NotFoundError } from "../errors";
-
-interface Resolvers extends WithIndexSignature {
+interface Resolvers {
   Query: QueryResolvers;
   Mutation: MutationResolvers;
   Draft: DraftResolvers;
 }
 
-const resolvers: Resolvers = {
+const resolvers: WithIndex<IResolvers & Resolvers> = {
   Query: {
     async getDraftById(parent, args, context) {
       const { _id } = args;
@@ -96,14 +95,8 @@ const resolvers: Resolvers = {
   },
   Mutation: {
     async createDraft(parent, args, context) {
-      const {
-        postId,
-        title,
-        content,
-        contentText,
-        tagIds,
-        thumbnailUrl
-      } = args;
+      const { postId, title, content, contentText, tagIds, thumbnailUrl } =
+        args;
       const { db, isAdmin, userData } = context;
 
       // Admin-only
@@ -145,15 +138,8 @@ const resolvers: Resolvers = {
       return newDraftData;
     },
     async updateDraft(parent, args, context) {
-      const {
-        _id,
-        postId,
-        title,
-        content,
-        contentText,
-        tagIds,
-        thumbnailUrl
-      } = args;
+      const { _id, postId, title, content, contentText, tagIds, thumbnailUrl } =
+        args;
       const { db, isAdmin, userData } = context;
 
       // Admin-only

@@ -1,22 +1,23 @@
 import { ObjectId } from "mongodb";
-import { AuthenticationError, ForbiddenError } from "apollo-server";
 import { QueryResolvers, MutationResolvers, PostResolvers } from "../gen-types";
-import { WithIndexSignature } from "Utils";
-import { NotFoundError } from "../errors";
+import { IResolvers } from "graphql-tools";
+import { WithIndex } from "../../typings/typings.js";
+import {
+  NotFoundError,
+  AuthenticationError,
+  ForbiddenError
+} from "../errors/index.js";
 
-interface Resolvers extends WithIndexSignature {
+type Resolvers = {
   Query: QueryResolvers;
   Mutation: MutationResolvers;
   Post: PostResolvers;
-}
+};
 
-const resolvers: Resolvers = {
+const resolvers: WithIndex<IResolvers & Resolvers> = {
   Query: {
     async posts(parent, args, context) {
-      const data = await context.db
-        .collection("posts")
-        .find()
-        .toArray();
+      const data = await context.db.collection("posts").find().toArray();
       return data;
     },
     async getPostById(parent, args, context) {
