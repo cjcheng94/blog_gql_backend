@@ -1,49 +1,42 @@
-import { ApolloServer, gql } from "apollo-server";
-import { makeExecutableSchema } from "graphql-tools";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
 import { MongoClient, Db, ObjectId } from "mongodb";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import * as posts from "./posts";
-import * as users from "./users";
-import * as tags from "./tags";
-import * as drafts from "./drafts";
-import * as images from "./images";
+import { gql } from "graphql-tag";
+
+import * as posts from "./posts/index.js";
+import * as users from "./users/index.js";
+import * as tags from "./tags/index.js";
+import * as drafts from "./drafts/index.js";
+
+import { Context, DecodedToken } from "../typings/typings";
 
 dotenv.config();
-
-type DecodedToken = {
-  username: string;
-  userId: string;
-  iat: number;
-  exp: number;
-};
 
 const typeDef = gql`
   type Query
   type Mutation
 `;
 
-const schema = makeExecutableSchema({
+let db: Db | undefined;
+const server = new ApolloServer<Context>({
   typeDefs: [
     typeDef,
     posts.typeDefs,
     users.typeDefs,
     tags.typeDefs,
-    drafts.typeDefs,
-    images.typeDefs
+    drafts.typeDefs
   ],
   resolvers: [
     posts.resolvers,
     users.resolvers,
     tags.resolvers,
-    drafts.resolvers,
-    images.resolvers
-  ]
+    drafts.resolvers
+  ],
+  status400ForVariableCoercionErrors: true
 });
-
-let db: Db | undefined;
-const apolloServer = new ApolloServer({
-  schema,
+const { url } = await startStandaloneServer(server, {
   context: async ({ req }) => {
     // Connect to database
     if (!db) {
@@ -58,7 +51,7 @@ const apolloServer = new ApolloServer({
     }
     // User auth
     let token = "";
-    let userData = null;
+    let userData: DecodedToken | null = null;
     let isAuthed = false;
     let isAdmin = false;
 
@@ -79,26 +72,14 @@ const apolloServer = new ApolloServer({
       }
     }
 
-    return { db, userData, isAuthed, isAdmin };
+    return {
+      db: db as Db,
+      userData: userData as DecodedToken,
+      isAuthed,
+      isAdmin
+    };
   },
-  formatResponse: (response, requestContext) => {
-    if (
-      !requestContext.response ||
-      !requestContext.response.http ||
-      !requestContext.operation
-    ) {
-      return null;
-    }
-    // Add X-Is-Cacheable header to "query" type requests
-    const isCacheable = requestContext.operation.operation === "query";
-    if (isCacheable) {
-      requestContext.response.http.headers.set("X-Is-Cacheable", "true");
-      return response;
-    }
-    return null;
-  }
+  listen: { port: Number.parseInt(process.env.PORT!) || 4000 }
 });
 
-apolloServer.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+console.log(`🚀  Server ready at ${url}`);

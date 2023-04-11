@@ -1,11 +1,12 @@
-import { gql } from "apollo-server";
+import { gql } from "graphql-tag";
 
 const typeDefs = gql`
   scalar Token
+  scalar Void
   extend type Query {
     users: [User]
     user(username: String): User
-    userSignup(username: String!, password: String!): User
+    userSignup(username: String!, password: String!): Void
     userLogin(username: String!, password: String!): LoginResponse
     getUserPosts(_id: String!): [Post]
   }

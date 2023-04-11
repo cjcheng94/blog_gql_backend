@@ -1,28 +1,40 @@
 import { ObjectId } from "mongodb";
-import { AuthenticationError, ForbiddenError } from "apollo-server";
-import { QueryResolvers, MutationResolvers, PostResolvers } from "../gen-types";
-import { WithIndexSignature } from "Utils";
-import { NotFoundError } from "../errors";
+import {
+  QueryResolvers,
+  MutationResolvers,
+  PostResolvers,
+  Post,
+  PostResult,
+  User,
+  Tag
+} from "../gen-types";
+import { IResolvers } from "graphql-tools";
+import { WithIndex } from "../../typings/typings";
 
-interface Resolvers extends WithIndexSignature {
+import {
+  NotFoundError,
+  AuthenticationError,
+  ForbiddenError
+} from "../errors/index.js";
+
+type Resolvers = {
   Query: QueryResolvers;
   Mutation: MutationResolvers;
   Post: PostResolvers;
-}
+};
 
-const resolvers: Resolvers = {
+const resolvers: WithIndex<IResolvers & Resolvers> = {
   Query: {
     async posts(parent, args, context) {
-      const data = await context.db
-        .collection("posts")
-        .find()
-        .toArray();
+      const data = await context.db.collection<Post>("posts").find().toArray();
       return data;
     },
     async getPostById(parent, args, context) {
       const { _id } = args;
       const objId = new ObjectId(_id);
-      const data = await context.db.collection("posts").findOne({ _id: objId });
+      const data = await context.db
+        .collection("posts")
+        .findOne<Post>({ _id: objId });
       if (!data) {
         throw new NotFoundError("Cannot find post");
       }
@@ -49,7 +61,7 @@ const resolvers: Resolvers = {
 
       const data = await context.db
         .collection("posts")
-        .find({ tagIds: mongoQueryValue })
+        .find<Post>({ tagIds: mongoQueryValue })
         .toArray();
 
       if (!data) {
@@ -73,7 +85,7 @@ const resolvers: Resolvers = {
       }
 
       const data = await context.db
-        .collection("posts")
+        .collection<PostResult>("posts")
         .aggregate([
           {
             $search: {
@@ -165,6 +177,7 @@ const resolvers: Resolvers = {
         date: new Date().toISOString()
       };
       const dbRes = await context.db.collection("posts").insertOne(newPost);
+
       // Error creating post
       if (!dbRes.insertedId) {
         // Effectively INTERNAL_SERVER_ERROR type
@@ -172,7 +185,7 @@ const resolvers: Resolvers = {
       }
       const newPostData = await context.db
         .collection("posts")
-        .findOne({ _id: dbRes.insertedId });
+        .findOne<Post>({ _id: dbRes.insertedId });
       if (!newPostData) {
         throw new NotFoundError("Cannot find post");
       }
@@ -223,7 +236,7 @@ const resolvers: Resolvers = {
       // Update success
       const updatedPost = await context.db
         .collection("posts")
-        .findOne({ _id: objId });
+        .findOne<Post>({ _id: objId });
       // Cannot find such post
       if (!updatedPost) {
         throw new NotFoundError("Cannot find updated post");
@@ -243,6 +256,7 @@ const resolvers: Resolvers = {
       const postToDelete = await context.db
         .collection("posts")
         .findOne({ _id: objId });
+
       // Cannot find such a post
       if (!postToDelete) {
         throw new NotFoundError("Cannot find post");
@@ -261,7 +275,7 @@ const resolvers: Resolvers = {
         throw new Error("Internal server error");
       }
       // Deleted successfully
-      return postToDelete;
+      return postToDelete as Post;
     }
   },
   Post: {
@@ -270,7 +284,8 @@ const resolvers: Resolvers = {
       const authorObject = await context.db
         .collection("users")
         .findOne({ _id: new ObjectId(author) });
-      return authorObject;
+
+      return authorObject as User;
     },
     async tags(post, args, context) {
       const { tagIds } = post;
@@ -285,7 +300,7 @@ const resolvers: Resolvers = {
               .findOne({ _id: new ObjectId(tagId as string) })
         )
       );
-      return tagObjects;
+      return tagObjects as Tag[];
     }
   }
 };
