@@ -13,8 +13,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Token: any;
-  Void: any;
+  Token: string;
+  Void: null;
 };
 
 export type Draft = {

@@ -74,42 +74,42 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
     },
 
     async userSignup(parent, args, context) {
-      // Stop taking new users
+      // Stop taking in new users
       throw new ForbiddenError(
         "Sorry, we are not accepting new users at the moment"
       );
 
-      const { username, password } = args;
-      const { db } = context;
-      // Query username for duplicates
-      const dupeUser = await db.collection("users").findOne({ username });
-      // Username already exists
-      if (!!dupeUser) {
-        throw new ConflictError("username already exists");
-      }
-      // Username ok, hash password
-      const hash = await bcrypt.hash(password, 10);
-      // Create new user
-      const newUser = {
-        _id: new ObjectId(),
-        posts: [],
-        username,
-        password: hash
-      };
-      const dbRes = await db.collection("users").insertOne(newUser);
-      // Error creating user
-      if (!dbRes.insertedId) {
-        // Effectively INTERNAL_SERVER_ERROR type
-        throw new Error("Internal server error");
-      }
-      const newUserData = await context.db
-        .collection("users")
-        .findOne({ _id: dbRes.insertedId });
-      if (!newUserData) {
-        throw new NotFoundError("Cannot find user");
-      }
-      // Success, return newly created user
-      return newUserData;
+      // const { username, password } = args;
+      // const { db } = context;
+      // // Query username for duplicates
+      // const dupeUser = await db.collection("users").findOne({ username });
+      // // Username already exists
+      // if (!!dupeUser) {
+      //   throw new ConflictError("username already exists");
+      // }
+      // // Username ok, hash password
+      // const hash = await bcrypt.hash(password, 10);
+      // // Create new user
+      // const newUser = {
+      //   _id: new ObjectId(),
+      //   posts: [],
+      //   username,
+      //   password: hash
+      // };
+      // const dbRes = await db.collection("users").insertOne(newUser);
+      // // Error creating user
+      // if (!dbRes.insertedId) {
+      //   // Effectively INTERNAL_SERVER_ERROR type
+      //   throw new Error("Internal server error");
+      // }
+      // const newUserData = await context.db
+      //   .collection("users")
+      //   .findOne({ _id: dbRes.insertedId });
+      // if (!newUserData) {
+      //   throw new NotFoundError("Cannot find user");
+      // }
+      // // Success, return newly created user
+      // return newUserData;
     },
     async getUserPosts(parent, args, context) {
       const { _id } = args;
