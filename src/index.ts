@@ -1,15 +1,15 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import gql from "graphql-tag";
-import { makeExecutableSchema } from "graphql-tools";
 import { MongoClient, Db, ObjectId } from "mongodb";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import * as posts from "./posts";
-import * as users from "./users";
-import * as tags from "./tags";
-import * as drafts from "./drafts";
-import * as images from "./images";
+import { gql } from "graphql-tag";
+
+import * as posts from "./posts/index.js";
+import * as users from "./users/index.js";
+import * as tags from "./tags/index.js";
+import * as drafts from "./drafts/index.js";
+import * as images from "./images/index.js";
 
 dotenv.config();
 
@@ -24,24 +24,6 @@ const typeDef = gql`
   type Query
   type Mutation
 `;
-
-const schema = makeExecutableSchema({
-  typeDefs: [
-    typeDef,
-    posts.typeDefs,
-    users.typeDefs,
-    tags.typeDefs,
-    drafts.typeDefs,
-    images.typeDefs
-  ],
-  resolvers: [
-    posts.resolvers,
-    users.resolvers,
-    tags.resolvers,
-    drafts.resolvers,
-    images.resolvers
-  ]
-});
 
 let db: Db | undefined;
 const server = new ApolloServer({
@@ -59,9 +41,9 @@ const server = new ApolloServer({
     tags.resolvers,
     drafts.resolvers,
     images.resolvers
-  ]
+  ],
+  status400ForVariableCoercionErrors: true
 });
-
 const { url } = await startStandaloneServer(server, {
   context: async ({ req }) => {
     // Connect to database
@@ -77,7 +59,7 @@ const { url } = await startStandaloneServer(server, {
     }
     // User auth
     let token = "";
-    let userData = null;
+    let userData: DecodedToken | null = null;
     let isAuthed = false;
     let isAdmin = false;
 
