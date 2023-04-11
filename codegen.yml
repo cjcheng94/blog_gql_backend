@@ -1,13 +1,18 @@
 overwrite: true
-schema: ["src/posts/typeDefs.ts", "src/users/typeDefs.ts", "src/tags/typeDefs.ts","src/drafts/typeDefs.ts","src/images/typeDefs.ts"]
+schema:
+  [
+    "src/posts/typeDefs.ts",
+    "src/users/typeDefs.ts",
+    "src/tags/typeDefs.ts",
+    "src/drafts/typeDefs.ts",
+    "src/images/typeDefs.ts"
+  ]
 documents: null
 generates:
   src/gen-types.d.ts:
     plugins:
       - "typescript"
       - "typescript-resolvers"
-      - "typescript-mongodb"
-      - "typescript-document-nodes"
     config:
       useIndexSignature: true
   ./graphql.schema.json:

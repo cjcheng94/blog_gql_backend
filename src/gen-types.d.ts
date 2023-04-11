@@ -1,10 +1,10 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -15,33 +15,25 @@ export type Scalars = {
   Token: any;
 };
 
-
-
-
-
-
-
-
-
 export type Draft = {
   __typename?: 'Draft';
   _id: Scalars['ID'];
-  postId?: Maybe<Scalars['ID']>;
-  title: Scalars['String'];
   author: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
-  thumbnailUrl?: Maybe<Scalars['String']>;
   date: Scalars['String'];
-  tags: Array<Maybe<Tag>>;
+  postId?: Maybe<Scalars['ID']>;
   tagIds: Array<Maybe<Scalars['ID']>>;
+  tags: Array<Maybe<Tag>>;
+  thumbnailUrl?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type Highlight = {
   __typename?: 'Highlight';
   path?: Maybe<Scalars['String']>;
-  texts?: Maybe<Array<Maybe<Text>>>;
   score?: Maybe<Scalars['Float']>;
+  texts?: Maybe<Array<Maybe<Text>>>;
 };
 
 export type Image = {
@@ -52,9 +44,9 @@ export type Image = {
 
 export type LoginResponse = {
   __typename?: 'LoginResponse';
+  token?: Maybe<Scalars['Token']>;
   userId?: Maybe<Scalars['ID']>;
   username?: Maybe<Scalars['String']>;
-  token?: Maybe<Scalars['Token']>;
 };
 
 export type Mutation = {
@@ -74,12 +66,12 @@ export type Mutation = {
 
 
 export type MutationCreateDraftArgs = {
-  postId?: Maybe<Scalars['ID']>;
-  title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
-  thumbnailUrl?: Maybe<Scalars['String']>;
-  tagIds: Array<Maybe<Scalars['ID']>>;
+  postId?: InputMaybe<Scalars['ID']>;
+  tagIds: Array<InputMaybe<Scalars['ID']>>;
+  thumbnailUrl?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 
@@ -89,11 +81,11 @@ export type MutationCreateImageArgs = {
 
 
 export type MutationCreatePostArgs = {
-  title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
-  thumbnailUrl?: Maybe<Scalars['String']>;
-  tagIds: Array<Maybe<Scalars['ID']>>;
+  tagIds: Array<InputMaybe<Scalars['ID']>>;
+  thumbnailUrl?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 
@@ -124,12 +116,12 @@ export type MutationDeleteTagArgs = {
 
 export type MutationUpdateDraftArgs = {
   _id: Scalars['String'];
-  postId?: Maybe<Scalars['ID']>;
-  title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
-  thumbnailUrl?: Maybe<Scalars['String']>;
-  tagIds: Array<Maybe<Scalars['ID']>>;
+  postId?: InputMaybe<Scalars['ID']>;
+  tagIds: Array<InputMaybe<Scalars['ID']>>;
+  thumbnailUrl?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 
@@ -141,41 +133,41 @@ export type MutationUpdateImageArgs = {
 
 export type MutationUpdatePostArgs = {
   _id: Scalars['String'];
-  title: Scalars['String'];
   content: Scalars['String'];
   contentText: Scalars['String'];
-  thumbnailUrl?: Maybe<Scalars['String']>;
-  tagIds: Array<Maybe<Scalars['ID']>>;
+  tagIds: Array<InputMaybe<Scalars['ID']>>;
+  thumbnailUrl?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type Post = {
   __typename?: 'Post';
   _id: Scalars['ID'];
-  title: Scalars['String'];
   author: Scalars['String'];
+  authorInfo: User;
   content: Scalars['String'];
   contentText: Scalars['String'];
   date: Scalars['String'];
-  authorInfo: User;
-  tags: Array<Maybe<Tag>>;
   tagIds: Array<Maybe<Scalars['ID']>>;
+  tags: Array<Maybe<Tag>>;
   thumbnailUrl?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type PostResult = {
   __typename?: 'PostResult';
   _id: Scalars['ID'];
-  title: Scalars['String'];
   author: Scalars['String'];
+  authorInfo: User;
   content: Scalars['String'];
   contentText: Scalars['String'];
   date: Scalars['String'];
-  score?: Maybe<Scalars['Float']>;
-  authorInfo: User;
-  tags: Array<Maybe<Tag>>;
-  tagIds: Array<Maybe<Scalars['ID']>>;
   highlights?: Maybe<Array<Maybe<Highlight>>>;
+  score?: Maybe<Scalars['Float']>;
+  tagIds: Array<Maybe<Scalars['ID']>>;
+  tags: Array<Maybe<Tag>>;
   thumbnailUrl?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type Query = {
@@ -214,7 +206,7 @@ export type QueryGetPostByIdArgs = {
 
 
 export type QueryGetPostsByTagsArgs = {
-  tagIds: Array<Maybe<Scalars['ID']>>;
+  tagIds: Array<InputMaybe<Scalars['ID']>>;
 };
 
 
@@ -230,7 +222,7 @@ export type QueryImageArgs = {
 
 export type QuerySearchArgs = {
   searchTerm: Scalars['String'];
-  tagIds?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  tagIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
 
@@ -240,19 +232,19 @@ export type QueryTagArgs = {
 
 
 export type QueryUserArgs = {
-  username?: Maybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryUserLoginArgs = {
-  username: Scalars['String'];
   password: Scalars['String'];
+  username: Scalars['String'];
 };
 
 
 export type QueryUserSignupArgs = {
-  username: Scalars['String'];
   password: Scalars['String'];
+  username: Scalars['String'];
 };
 
 export type Tag = {
@@ -263,20 +255,14 @@ export type Tag = {
 
 export type Text = {
   __typename?: 'Text';
-  value?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
 };
-
 
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID'];
   username: Scalars['String'];
-};
-
-export type AdditionalEntityFields = {
-  path?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -285,19 +271,10 @@ export type ResolversObject<TObject> = WithIndex<TObject>;
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 
-export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  fragment: string;
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-
-export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | StitchingResolver<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -311,7 +288,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -356,101 +333,66 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Draft: ResolverTypeWrapper<Draft>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Highlight: ResolverTypeWrapper<Highlight>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
+  Highlight: ResolverTypeWrapper<Highlight>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
   Image: ResolverTypeWrapper<Image>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Mutation: ResolverTypeWrapper<{}>;
   Post: ResolverTypeWrapper<Post>;
   PostResult: ResolverTypeWrapper<PostResult>;
   Query: ResolverTypeWrapper<{}>;
+  String: ResolverTypeWrapper<Scalars['String']>;
   Tag: ResolverTypeWrapper<Tag>;
   Text: ResolverTypeWrapper<Text>;
   Token: ResolverTypeWrapper<Scalars['Token']>;
   User: ResolverTypeWrapper<User>;
-  AdditionalEntityFields: AdditionalEntityFields;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  Boolean: Scalars['Boolean'];
   Draft: Draft;
-  ID: Scalars['ID'];
-  String: Scalars['String'];
-  Highlight: Highlight;
   Float: Scalars['Float'];
+  Highlight: Highlight;
+  ID: Scalars['ID'];
   Image: Image;
   LoginResponse: LoginResponse;
   Mutation: {};
   Post: Post;
   PostResult: PostResult;
   Query: {};
+  String: Scalars['String'];
   Tag: Tag;
   Text: Text;
   Token: Scalars['Token'];
   User: User;
-  AdditionalEntityFields: AdditionalEntityFields;
-  Boolean: Scalars['Boolean'];
 }>;
-
-export type UnionDirectiveArgs = {   discriminatorField?: Maybe<Scalars['String']>;
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>; };
-
-export type UnionDirectiveResolver<Result, Parent, ContextType = any, Args = UnionDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type AbstractEntityDirectiveArgs = {   discriminatorField: Scalars['String'];
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>; };
-
-export type AbstractEntityDirectiveResolver<Result, Parent, ContextType = any, Args = AbstractEntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type EntityDirectiveArgs = {   embedded?: Maybe<Scalars['Boolean']>;
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>; };
-
-export type EntityDirectiveResolver<Result, Parent, ContextType = any, Args = EntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type ColumnDirectiveArgs = {   overrideType?: Maybe<Scalars['String']>; };
-
-export type ColumnDirectiveResolver<Result, Parent, ContextType = any, Args = ColumnDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type IdDirectiveArgs = {  };
-
-export type IdDirectiveResolver<Result, Parent, ContextType = any, Args = IdDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type LinkDirectiveArgs = {   overrideType?: Maybe<Scalars['String']>; };
-
-export type LinkDirectiveResolver<Result, Parent, ContextType = any, Args = LinkDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type EmbeddedDirectiveArgs = {  };
-
-export type EmbeddedDirectiveResolver<Result, Parent, ContextType = any, Args = EmbeddedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type MapDirectiveArgs = {   path: Scalars['String']; };
-
-export type MapDirectiveResolver<Result, Parent, ContextType = any, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type DraftResolvers<ContextType = any, ParentType extends ResolversParentTypes['Draft'] = ResolversParentTypes['Draft']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  postId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
+  postId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
+  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
+  thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type HighlightResolvers<ContextType = any, ParentType extends ResolversParentTypes['Highlight'] = ResolversParentTypes['Highlight']> = ResolversObject<{
   path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  texts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Text']>>>, ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  texts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Text']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -461,53 +403,53 @@ export type ImageResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = ResolversObject<{
+  token?: Resolver<Maybe<ResolversTypes['Token']>, ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  token?: Resolver<Maybe<ResolversTypes['Token']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  createDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationCreateDraftArgs, 'title' | 'content' | 'contentText' | 'tagIds'>>;
+  createDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationCreateDraftArgs, 'content' | 'contentText' | 'tagIds' | 'title'>>;
   createImage?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationCreateImageArgs, 'caption'>>;
-  createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title' | 'content' | 'contentText' | 'tagIds'>>;
+  createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'content' | 'contentText' | 'tagIds' | 'title'>>;
   createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'name'>>;
   deleteDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationDeleteDraftArgs, '_id'>>;
   deleteImage?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationDeleteImageArgs, '_id'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, '_id'>>;
   deleteTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'tagId'>>;
-  updateDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationUpdateDraftArgs, '_id' | 'title' | 'content' | 'contentText' | 'tagIds'>>;
+  updateDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationUpdateDraftArgs, '_id' | 'content' | 'contentText' | 'tagIds' | 'title'>>;
   updateImage?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationUpdateImageArgs, '_id' | 'caption'>>;
-  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'title' | 'content' | 'contentText' | 'tagIds'>>;
+  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'content' | 'contentText' | 'tagIds' | 'title'>>;
 }>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
   tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
+  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
   thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type PostResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['PostResult'] = ResolversParentTypes['PostResult']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  score?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
-  authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
-  tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
   highlights?: Resolver<Maybe<Array<Maybe<ResolversTypes['Highlight']>>>, ParentType, ContextType>;
+  score?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
+  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
   thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -523,9 +465,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'searchTerm'>>;
   tag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QueryTagArgs, '_id'>>;
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>;
-  userLogin?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'username' | 'password'>>;
-  userSignup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'username' | 'password'>>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUserArgs>>;
+  userLogin?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'password' | 'username'>>;
+  userSignup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'password' | 'username'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
 }>;
 
@@ -536,8 +478,8 @@ export type TagResolvers<ContextType = any, ParentType extends ResolversParentTy
 }>;
 
 export type TextResolvers<ContextType = any, ParentType extends ResolversParentTypes['Text'] = ResolversParentTypes['Text']> = ResolversObject<{
-  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -566,27 +508,3 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   User?: UserResolvers<ContextType>;
 }>;
 
-
-/**
- * @deprecated
- * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
-export type DirectiveResolvers<ContextType = any> = ResolversObject<{
-  union?: UnionDirectiveResolver<any, any, ContextType>;
-  abstractEntity?: AbstractEntityDirectiveResolver<any, any, ContextType>;
-  entity?: EntityDirectiveResolver<any, any, ContextType>;
-  column?: ColumnDirectiveResolver<any, any, ContextType>;
-  id?: IdDirectiveResolver<any, any, ContextType>;
-  link?: LinkDirectiveResolver<any, any, ContextType>;
-  embedded?: EmbeddedDirectiveResolver<any, any, ContextType>;
-  map?: MapDirectiveResolver<any, any, ContextType>;
-}>;
-
-
-/**
- * @deprecated
- * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;
-import { ObjectID } from 'mongodb';
