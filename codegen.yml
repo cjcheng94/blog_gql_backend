@@ -13,7 +13,11 @@ generates:
       - "typescript"
       - "typescript-resolvers"
       - "typescript-mongodb"
+      - "typescript-operations"
     config:
+      scalars:
+        Void: "null"
+        Token: string
       useIndexSignature: true
       contextType: ../typings/typings#Context
   ./graphql.schema.json:
