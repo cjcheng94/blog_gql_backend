@@ -1,0 +1,16 @@
+{
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "ignore": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "node_modules",
+    "dist"
+  ],
+  "watch": [
+    "src"
+  ],
+  "exec": "ts-node-esm ./src/index.ts",
+  "ext": "ts"
+}
