@@ -4,8 +4,7 @@ schema:
     "src/posts/typeDefs.ts",
     "src/users/typeDefs.ts",
     "src/tags/typeDefs.ts",
-    "src/drafts/typeDefs.ts",
-    "src/images/typeDefs.ts"
+    "src/drafts/typeDefs.ts"
   ]
 documents: null
 generates:

@@ -37,12 +37,6 @@ export type Highlight = {
   texts?: Maybe<Array<Maybe<Text>>>;
 };
 
-export type Image = {
-  __typename?: 'Image';
-  _id: Scalars['ID'];
-  caption: Scalars['String'];
-};
-
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   token?: Maybe<Scalars['Token']>;
@@ -53,15 +47,12 @@ export type LoginResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   createDraft?: Maybe<Draft>;
-  createImage?: Maybe<Image>;
   createPost: Post;
   createTag?: Maybe<Tag>;
   deleteDraft?: Maybe<Draft>;
-  deleteImage?: Maybe<Image>;
   deletePost?: Maybe<Post>;
   deleteTag?: Maybe<Tag>;
   updateDraft?: Maybe<Draft>;
-  updateImage?: Maybe<Image>;
   updatePost?: Maybe<Post>;
 };
 
@@ -73,11 +64,6 @@ export type MutationCreateDraftArgs = {
   tagIds: Array<InputMaybe<Scalars['ID']>>;
   thumbnailUrl?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
-};
-
-
-export type MutationCreateImageArgs = {
-  caption: Scalars['String'];
 };
 
 
@@ -100,11 +86,6 @@ export type MutationDeleteDraftArgs = {
 };
 
 
-export type MutationDeleteImageArgs = {
-  _id: Scalars['ID'];
-};
-
-
 export type MutationDeletePostArgs = {
   _id: Scalars['String'];
 };
@@ -123,12 +104,6 @@ export type MutationUpdateDraftArgs = {
   tagIds: Array<InputMaybe<Scalars['ID']>>;
   thumbnailUrl?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
-};
-
-
-export type MutationUpdateImageArgs = {
-  _id: Scalars['ID'];
-  caption: Scalars['String'];
 };
 
 
@@ -179,7 +154,6 @@ export type Query = {
   getPostsByTags?: Maybe<Array<Maybe<Post>>>;
   getUserDrafts?: Maybe<Array<Maybe<Draft>>>;
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
-  image?: Maybe<Image>;
   posts?: Maybe<Array<Maybe<Post>>>;
   search?: Maybe<Array<Maybe<PostResult>>>;
   tag?: Maybe<Tag>;
@@ -213,11 +187,6 @@ export type QueryGetPostsByTagsArgs = {
 
 export type QueryGetUserPostsArgs = {
   _id: Scalars['String'];
-};
-
-
-export type QueryImageArgs = {
-  _id: Scalars['ID'];
 };
 
 
@@ -348,7 +317,6 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars['String']>;
   Highlight: ResolverTypeWrapper<Highlight>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
-  Image: ResolverTypeWrapper<Image>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Mutation: ResolverTypeWrapper<{}>;
   Post: ResolverTypeWrapper<Post>;
@@ -369,7 +337,6 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   Highlight: Highlight;
   Float: Scalars['Float'];
-  Image: Image;
   LoginResponse: LoginResponse;
   Mutation: {};
   Post: Post;
@@ -451,12 +418,6 @@ export type HighlightResolvers<ContextType = Context, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type ImageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = ResolversObject<{
-  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  caption?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type LoginResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = ResolversObject<{
   token?: Resolver<Maybe<ResolversTypes['Token']>, ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
@@ -466,15 +427,12 @@ export type LoginResponseResolvers<ContextType = Context, ParentType extends Res
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   createDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationCreateDraftArgs, 'content' | 'contentText' | 'tagIds' | 'title'>>;
-  createImage?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationCreateImageArgs, 'caption'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'content' | 'contentText' | 'tagIds' | 'title'>>;
   createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'name'>>;
   deleteDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationDeleteDraftArgs, '_id'>>;
-  deleteImage?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationDeleteImageArgs, '_id'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, '_id'>>;
   deleteTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'tagId'>>;
   updateDraft?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<MutationUpdateDraftArgs, '_id' | 'content' | 'contentText' | 'tagIds' | 'title'>>;
-  updateImage?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationUpdateImageArgs, '_id' | 'caption'>>;
   updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'content' | 'contentText' | 'tagIds' | 'title'>>;
 }>;
 
@@ -515,7 +473,6 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   getPostsByTags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetPostsByTagsArgs, 'tagIds'>>;
   getUserDrafts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Draft']>>>, ParentType, ContextType>;
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
-  image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<QueryImageArgs, '_id'>>;
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
   search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'searchTerm'>>;
   tag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QueryTagArgs, '_id'>>;
@@ -551,7 +508,6 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
 export type Resolvers<ContextType = Context> = ResolversObject<{
   Draft?: DraftResolvers<ContextType>;
   Highlight?: HighlightResolvers<ContextType>;
-  Image?: ImageResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;

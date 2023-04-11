@@ -9,7 +9,6 @@ import * as posts from "./posts/index.js";
 import * as users from "./users/index.js";
 import * as tags from "./tags/index.js";
 import * as drafts from "./drafts/index.js";
-import * as images from "./images/index.js";
 
 import { Context, DecodedToken } from "../typings/typings";
 
@@ -27,15 +26,13 @@ const server = new ApolloServer<Context>({
     posts.typeDefs,
     users.typeDefs,
     tags.typeDefs,
-    drafts.typeDefs,
-    images.typeDefs
+    drafts.typeDefs
   ],
   resolvers: [
     posts.resolvers,
     users.resolvers,
     tags.resolvers,
-    drafts.resolvers,
-    images.resolvers
+    drafts.resolvers
   ],
   status400ForVariableCoercionErrors: true
 });
