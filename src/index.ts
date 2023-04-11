@@ -11,14 +11,9 @@ import * as tags from "./tags/index.js";
 import * as drafts from "./drafts/index.js";
 import * as images from "./images/index.js";
 
-dotenv.config();
+import { Context, DecodedToken } from "../typings/typings";
 
-type DecodedToken = {
-  username: string;
-  userId: string;
-  iat: number;
-  exp: number;
-};
+dotenv.config();
 
 const typeDef = gql`
   type Query
@@ -26,7 +21,7 @@ const typeDef = gql`
 `;
 
 let db: Db | undefined;
-const server = new ApolloServer({
+const server = new ApolloServer<Context>({
   typeDefs: [
     typeDef,
     posts.typeDefs,
@@ -80,7 +75,12 @@ const { url } = await startStandaloneServer(server, {
       }
     }
 
-    return { db, userData, isAuthed, isAdmin };
+    return {
+      db: db as Db,
+      userData: userData as DecodedToken,
+      isAuthed,
+      isAdmin
+    };
   },
   listen: { port: 4000 }
 });
