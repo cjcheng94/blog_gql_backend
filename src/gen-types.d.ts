@@ -117,6 +117,12 @@ export type MutationUpdatePostArgs = {
   title: Scalars['String'];
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['String']>;
+  hasNextPage?: Maybe<Scalars['Boolean']>;
+};
+
 export type Post = {
   __typename?: 'Post';
   _id: Scalars['ID'];
@@ -131,8 +137,14 @@ export type Post = {
   title: Scalars['String'];
 };
 
-export type PostResult = {
-  __typename?: 'PostResult';
+export type PostEdge = {
+  __typename?: 'PostEdge';
+  cursor?: Maybe<Scalars['String']>;
+  node?: Maybe<Post>;
+};
+
+export type PostSearchResult = {
+  __typename?: 'PostSearchResult';
   _id: Scalars['ID'];
   author: Scalars['String'];
   authorInfo: User;
@@ -147,6 +159,12 @@ export type PostResult = {
   title: Scalars['String'];
 };
 
+export type PostsResponse = {
+  __typename?: 'PostsResponse';
+  edges?: Maybe<Array<Maybe<PostEdge>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getDraftById?: Maybe<Draft>;
@@ -155,8 +173,8 @@ export type Query = {
   getPostsByTags?: Maybe<Array<Maybe<Post>>>;
   getUserDrafts?: Maybe<Array<Maybe<Draft>>>;
   getUserPosts?: Maybe<Array<Maybe<Post>>>;
-  posts?: Maybe<Array<Maybe<Post>>>;
-  search?: Maybe<Array<Maybe<PostResult>>>;
+  posts?: Maybe<PostsResponse>;
+  search?: Maybe<Array<Maybe<PostSearchResult>>>;
   tag?: Maybe<Tag>;
   tags?: Maybe<Array<Maybe<Tag>>>;
   user?: Maybe<User>;
@@ -188,6 +206,12 @@ export type QueryGetPostsByTagsArgs = {
 
 export type QueryGetUserPostsArgs = {
   _id: Scalars['String'];
+};
+
+
+export type QueryPostsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -320,16 +344,20 @@ export type ResolversTypes = ResolversObject<{
   Float: ResolverTypeWrapper<Scalars['Float']>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Mutation: ResolverTypeWrapper<{}>;
+  PageInfo: ResolverTypeWrapper<PageInfo>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Post: ResolverTypeWrapper<Post>;
-  PostResult: ResolverTypeWrapper<PostResult>;
+  PostEdge: ResolverTypeWrapper<PostEdge>;
+  PostSearchResult: ResolverTypeWrapper<PostSearchResult>;
+  PostsResponse: ResolverTypeWrapper<PostsResponse>;
   Query: ResolverTypeWrapper<{}>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Tag: ResolverTypeWrapper<Tag>;
   Text: ResolverTypeWrapper<Text>;
   Token: ResolverTypeWrapper<Scalars['Token']>;
   User: ResolverTypeWrapper<User>;
   Void: ResolverTypeWrapper<Scalars['Void']>;
   AdditionalEntityFields: AdditionalEntityFields;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -341,16 +369,20 @@ export type ResolversParentTypes = ResolversObject<{
   Float: Scalars['Float'];
   LoginResponse: LoginResponse;
   Mutation: {};
+  PageInfo: PageInfo;
+  Boolean: Scalars['Boolean'];
   Post: Post;
-  PostResult: PostResult;
+  PostEdge: PostEdge;
+  PostSearchResult: PostSearchResult;
+  PostsResponse: PostsResponse;
   Query: {};
+  Int: Scalars['Int'];
   Tag: Tag;
   Text: Text;
   Token: Scalars['Token'];
   User: User;
   Void: Scalars['Void'];
   AdditionalEntityFields: AdditionalEntityFields;
-  Boolean: Scalars['Boolean'];
 }>;
 
 export type UnionDirectiveArgs = {
@@ -439,6 +471,12 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, '_id' | 'content' | 'contentText' | 'tagIds' | 'title'>>;
 }>;
 
+export type PageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
+  endCursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  hasNextPage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type PostResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -453,7 +491,13 @@ export type PostResolvers<ContextType = Context, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type PostResultResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PostResult'] = ResolversParentTypes['PostResult']> = ResolversObject<{
+export type PostEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PostEdge'] = ResolversParentTypes['PostEdge']> = ResolversObject<{
+  cursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type PostSearchResultResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PostSearchResult'] = ResolversParentTypes['PostSearchResult']> = ResolversObject<{
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   authorInfo?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
@@ -469,6 +513,12 @@ export type PostResultResolvers<ContextType = Context, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PostsResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PostsResponse'] = ResolversParentTypes['PostsResponse']> = ResolversObject<{
+  edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostEdge']>>>, ParentType, ContextType>;
+  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   getDraftById?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<QueryGetDraftByIdArgs, '_id'>>;
   getDraftByPostId?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<QueryGetDraftByPostIdArgs, 'postId'>>;
@@ -476,8 +526,8 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   getPostsByTags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetPostsByTagsArgs, 'tagIds'>>;
   getUserDrafts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Draft']>>>, ParentType, ContextType>;
   getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
-  posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
-  search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'searchTerm'>>;
+  posts?: Resolver<Maybe<ResolversTypes['PostsResponse']>, ParentType, ContextType, Partial<QueryPostsArgs>>;
+  search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostSearchResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'searchTerm'>>;
   tag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QueryTagArgs, '_id'>>;
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUserArgs>>;
@@ -517,8 +567,11 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Highlight?: HighlightResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PageInfo?: PageInfoResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
-  PostResult?: PostResultResolvers<ContextType>;
+  PostEdge?: PostEdgeResolvers<ContextType>;
+  PostSearchResult?: PostSearchResultResolvers<ContextType>;
+  PostsResponse?: PostsResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
   Text?: TextResolvers<ContextType>;
