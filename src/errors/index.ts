@@ -38,3 +38,13 @@ export class NotFoundError extends GraphQLError {
     });
   }
 }
+
+export class UserInputError extends GraphQLError {
+  constructor(message: string = "BAD_USER_INPUT") {
+    super(message, {
+      extensions: {
+        code: "BAD_USER_INPUT"
+      }
+    });
+  }
+}

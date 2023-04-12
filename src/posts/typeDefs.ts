@@ -2,10 +2,10 @@ import { gql } from "graphql-tag";
 
 const typeDefs = gql`
   extend type Query {
-    posts: [Post]
+    posts(first: Int, after: String): PostsResponse
     getPostById(_id: String!): Post
     getPostsByTags(tagIds: [ID]!): [Post]
-    search(searchTerm: String!, tagIds: [ID]): [PostResult]
+    search(searchTerm: String!, tagIds: [ID]): [PostSearchResult]
   }
   extend type Mutation {
     createPost(
@@ -37,6 +37,18 @@ const typeDefs = gql`
     tagIds: [ID]!
     thumbnailUrl: String
   }
+  type PostEdge {
+    cursor: String
+    node: Post
+  }
+  type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean
+  }
+  type PostsResponse {
+    edges: [PostEdge]
+    pageInfo: PageInfo
+  }
   type Text {
     value: String
     type: String
@@ -46,7 +58,7 @@ const typeDefs = gql`
     texts: [Text]
     score: Float
   }
-  type PostResult {
+  type PostSearchResult {
     _id: ID!
     title: String!
     author: String!
