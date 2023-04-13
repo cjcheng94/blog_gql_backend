@@ -2,9 +2,9 @@ import { gql } from "graphql-tag";
 
 const typeDefs = gql`
   extend type Query {
-    getDraftById(_id: String!): Draft
-    getDraftByPostId(postId: ID!): Draft
-    getUserDrafts: [Draft]
+    getDraftById(_id: String!): Draft!
+    getDraftByPostId(postId: ID!): Draft!
+    getUserDrafts: [Draft!]!
   }
   extend type Mutation {
     createDraft(
@@ -35,8 +35,8 @@ const typeDefs = gql`
     contentText: String!
     thumbnailUrl: String
     date: String!
-    tags: [Tag]!
-    tagIds: [ID]!
+    tags: [Tag!]!
+    tagIds: [ID!]!
   }
 `;
 
