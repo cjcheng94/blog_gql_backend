@@ -25,8 +25,8 @@ export type Draft = {
   contentText: Scalars['String'];
   date: Scalars['String'];
   postId?: Maybe<Scalars['ID']>;
-  tagIds: Array<Maybe<Scalars['ID']>>;
-  tags: Array<Maybe<Tag>>;
+  tagIds: Array<Scalars['ID']>;
+  tags: Array<Tag>;
   thumbnailUrl?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
@@ -40,9 +40,9 @@ export type Highlight = {
 
 export type LoginResponse = {
   __typename?: 'LoginResponse';
-  token?: Maybe<Scalars['Token']>;
-  userId?: Maybe<Scalars['ID']>;
-  username?: Maybe<Scalars['String']>;
+  token: Scalars['Token'];
+  userId: Scalars['ID'];
+  username: Scalars['String'];
 };
 
 export type Mutation = {
@@ -119,8 +119,8 @@ export type MutationUpdatePostArgs = {
 
 export type PageInfo = {
   __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['String']>;
-  hasNextPage?: Maybe<Scalars['Boolean']>;
+  endCursor: Scalars['String'];
+  hasNextPage: Scalars['Boolean'];
 };
 
 export type Post = {
@@ -131,16 +131,16 @@ export type Post = {
   content: Scalars['String'];
   contentText: Scalars['String'];
   date: Scalars['String'];
-  tagIds: Array<Maybe<Scalars['ID']>>;
-  tags: Array<Maybe<Tag>>;
+  tagIds: Array<Scalars['ID']>;
+  tags: Array<Tag>;
   thumbnailUrl?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
 
 export type PostEdge = {
   __typename?: 'PostEdge';
-  cursor?: Maybe<Scalars['String']>;
-  node?: Maybe<Post>;
+  cursor: Scalars['String'];
+  node: Post;
 };
 
 export type PostSearchResult = {
@@ -153,34 +153,34 @@ export type PostSearchResult = {
   date: Scalars['String'];
   highlights?: Maybe<Array<Maybe<Highlight>>>;
   score?: Maybe<Scalars['Float']>;
-  tagIds: Array<Maybe<Scalars['ID']>>;
-  tags: Array<Maybe<Tag>>;
+  tagIds: Array<Scalars['ID']>;
+  tags: Array<Tag>;
   thumbnailUrl?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
 
 export type PostsResponse = {
   __typename?: 'PostsResponse';
-  edges?: Maybe<Array<Maybe<PostEdge>>>;
-  pageInfo?: Maybe<PageInfo>;
+  edges: Array<PostEdge>;
+  pageInfo: PageInfo;
 };
 
 export type Query = {
   __typename?: 'Query';
-  getDraftById?: Maybe<Draft>;
-  getDraftByPostId?: Maybe<Draft>;
-  getPostById?: Maybe<Post>;
-  getPostsByTags?: Maybe<Array<Maybe<Post>>>;
-  getUserDrafts?: Maybe<Array<Maybe<Draft>>>;
-  getUserPosts?: Maybe<Array<Maybe<Post>>>;
-  posts?: Maybe<PostsResponse>;
-  search?: Maybe<Array<Maybe<PostSearchResult>>>;
-  tag?: Maybe<Tag>;
-  tags?: Maybe<Array<Maybe<Tag>>>;
-  user?: Maybe<User>;
-  userLogin?: Maybe<LoginResponse>;
+  getDraftById: Draft;
+  getDraftByPostId: Draft;
+  getPostById: Post;
+  getPostsByTags: Array<Post>;
+  getUserDrafts: Array<Draft>;
+  getUserPosts: Array<Post>;
+  posts: PostsResponse;
+  search: Array<PostSearchResult>;
+  tag: Tag;
+  tags: Array<Tag>;
+  user: User;
+  userLogin: LoginResponse;
   userSignup?: Maybe<Scalars['Void']>;
-  users?: Maybe<Array<Maybe<User>>>;
+  users: Array<User>;
 };
 
 
@@ -439,8 +439,8 @@ export type DraftResolvers<ContextType = Context, ParentType extends ResolversPa
   contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   postId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
-  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
+  tagIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
   thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -454,9 +454,9 @@ export type HighlightResolvers<ContextType = Context, ParentType extends Resolve
 }>;
 
 export type LoginResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = ResolversObject<{
-  token?: Resolver<Maybe<ResolversTypes['Token']>, ParentType, ContextType>;
-  userId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['Token'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -472,8 +472,8 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 }>;
 
 export type PageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
-  endCursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  hasNextPage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  endCursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -484,16 +484,16 @@ export type PostResolvers<ContextType = Context, ParentType extends ResolversPar
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   contentText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
-  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
+  tagIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
   thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type PostEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PostEdge'] = ResolversParentTypes['PostEdge']> = ResolversObject<{
-  cursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -506,34 +506,34 @@ export type PostSearchResultResolvers<ContextType = Context, ParentType extends 
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   highlights?: Resolver<Maybe<Array<Maybe<ResolversTypes['Highlight']>>>, ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
-  tagIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
-  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>;
+  tagIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
   thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type PostsResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PostsResponse'] = ResolversParentTypes['PostsResponse']> = ResolversObject<{
-  edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostEdge']>>>, ParentType, ContextType>;
-  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['PostEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  getDraftById?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<QueryGetDraftByIdArgs, '_id'>>;
-  getDraftByPostId?: Resolver<Maybe<ResolversTypes['Draft']>, ParentType, ContextType, RequireFields<QueryGetDraftByPostIdArgs, 'postId'>>;
-  getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
-  getPostsByTags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetPostsByTagsArgs, 'tagIds'>>;
-  getUserDrafts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Draft']>>>, ParentType, ContextType>;
-  getUserPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
-  posts?: Resolver<Maybe<ResolversTypes['PostsResponse']>, ParentType, ContextType, Partial<QueryPostsArgs>>;
-  search?: Resolver<Maybe<Array<Maybe<ResolversTypes['PostSearchResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'searchTerm'>>;
-  tag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QueryTagArgs, '_id'>>;
-  tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUserArgs>>;
-  userLogin?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'password' | 'username'>>;
+  getDraftById?: Resolver<ResolversTypes['Draft'], ParentType, ContextType, RequireFields<QueryGetDraftByIdArgs, '_id'>>;
+  getDraftByPostId?: Resolver<ResolversTypes['Draft'], ParentType, ContextType, RequireFields<QueryGetDraftByPostIdArgs, 'postId'>>;
+  getPostById?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
+  getPostsByTags?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostsByTagsArgs, 'tagIds'>>;
+  getUserDrafts?: Resolver<Array<ResolversTypes['Draft']>, ParentType, ContextType>;
+  getUserPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetUserPostsArgs, '_id'>>;
+  posts?: Resolver<ResolversTypes['PostsResponse'], ParentType, ContextType, Partial<QueryPostsArgs>>;
+  search?: Resolver<Array<ResolversTypes['PostSearchResult']>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'searchTerm'>>;
+  tag?: Resolver<ResolversTypes['Tag'], ParentType, ContextType, RequireFields<QueryTagArgs, '_id'>>;
+  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<QueryUserArgs>>;
+  userLogin?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<QueryUserLoginArgs, 'password' | 'username'>>;
   userSignup?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType, RequireFields<QueryUserSignupArgs, 'password' | 'username'>>;
-  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 }>;
 
 export type TagResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = ResolversObject<{

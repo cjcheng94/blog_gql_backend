@@ -2,8 +2,8 @@ import { gql } from "graphql-tag";
 
 const typeDefs = gql`
   extend type Query {
-    tags: [Tag]
-    tag(_id: ID!): Tag
+    tags: [Tag!]!
+    tag(_id: ID!): Tag!
   }
   extend type Mutation {
     createTag(name: String!): Tag
