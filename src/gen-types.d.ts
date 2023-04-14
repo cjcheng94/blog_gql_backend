@@ -213,7 +213,9 @@ export type QueryGetUserPostsArgs = {
 
 export type QueryPostsArgs = {
   after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 

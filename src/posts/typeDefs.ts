@@ -2,7 +2,7 @@ import { gql } from "graphql-tag";
 
 const typeDefs = gql`
   extend type Query {
-    posts(first: Int, after: String): PostsResponse!
+    posts(first: Int, after: String, last: Int, before: String): PostsResponse!
     getPostById(_id: String!): Post!
     getPostsByTags(tagIds: [ID]!): [Post!]!
     search(searchTerm: String!, tagIds: [ID]): [PostSearchResult!]!
