@@ -42,8 +42,10 @@ const typeDefs = gql`
     node: Post!
   }
   type PageInfo {
+    startCursor: String!
     endCursor: String!
     hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
   }
   type PostsResponse {
     edges: [PostEdge!]!

@@ -47,7 +47,7 @@ export const applyCursorsToEdges = <T extends Edge<any>>({
   if (after) {
     let afterEdgeIndex = edges.findIndex(edge => edge.cursor === after);
 
-    if (afterEdgeIndex > 0) {
+    if (afterEdgeIndex >= 0) {
       edges = edges.slice(afterEdgeIndex + 1);
     }
   }
@@ -59,7 +59,7 @@ export const applyCursorsToEdges = <T extends Edge<any>>({
  * Returns the first [first] number of elements from
  * pre-processed edges array by applyCursorsToEdges
 
- * @param after - Cursor to slice edges with
+ * @param after - Cursor of the last element in the previous page
  * @param first - Number of elements to return
  */
 export const edgesToReturn = <T extends Edge<any>>({
@@ -91,7 +91,7 @@ export const edgesToReturn = <T extends Edge<any>>({
  * Returns a boolean value indicating whether
  * there's a next page
 
- * @param after - Cursor to slice edges with
+ * @param after - Cursor of the last element in the previous page
  * @param first - Number of elements to return
  */
 export const isHasNextPage = <T extends Edge<any>>({
@@ -109,6 +109,29 @@ export const isHasNextPage = <T extends Edge<any>>({
       return true;
     }
     return false;
+  }
+  return false;
+};
+
+/**
+ * Returns a boolean value indicating whether
+ * there's a previous page
+
+ * @param after - Cursor of the last element in the previous page
+ */
+export const isHasPreviousPage = <T extends Edge<any>>({
+  allEdges,
+  after
+}: {
+  allEdges: T[];
+  after?: string | null;
+}) => {
+  if (after) {
+    let afterEdgeIndex = allEdges.findIndex(edge => edge.cursor === after);
+    // There exists an element before the [after] edge, which means there's a previous page
+    if (afterEdgeIndex > 0) {
+      return true;
+    }
   }
   return false;
 };

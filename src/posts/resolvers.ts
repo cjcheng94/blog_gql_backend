@@ -21,7 +21,8 @@ import {
 import {
   transformDataToEdges,
   edgesToReturn,
-  isHasNextPage
+  isHasNextPage,
+  isHasPreviousPage
 } from "../utils/pagination.js";
 
 type Resolvers = {
@@ -38,6 +39,7 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
       const { first, after } = args;
 
       const data = await context.db.collection<Post>("posts").find().toArray();
+
       const latestFirstData = data.sort(
         (a, b) => Date.parse(b.date) - Date.parse(a.date)
       );
@@ -56,18 +58,23 @@ const resolvers: WithIndex<IResolvers & Resolvers> = {
         first
       });
 
-      // The cursor of the last element in edges.
+      const hasPreviousPage = isHasPreviousPage({ allEdges, after });
+
+      // The cursor of the first/last element in edges.
       // API consumers can then use this cursor
-      // to request number of elements after this element
-      const endCursor = edges.at(-1)?.cursor;
+      // to request number of elements before/after this element
+      const startCursor = edges.at(0)?.cursor || "";
+      const endCursor = edges.at(-1)?.cursor || "";
 
       return {
         edges,
         pageInfo: {
+          startCursor,
           endCursor,
-          hasNextPage
+          hasNextPage,
+          hasPreviousPage
         }
-      } as PostsResponse;
+      };
     },
     async getPostById(parent, args, context) {
       const { _id } = args;
