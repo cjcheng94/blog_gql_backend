@@ -12,7 +12,7 @@
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen -w --config codegen.yml"
   },
   "keywords": [],
   "author": "",
