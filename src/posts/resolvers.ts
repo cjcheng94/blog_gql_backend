@@ -18,11 +18,7 @@ import {
   ForbiddenError
 } from "../errors/index.js";
 
-import {
-  transformDataToEdges,
-  edgesToReturn,
-  isHasNextPage
-} from "../utils/pagination.js";
+import { transformDataToConnection } from "../utils/pagination.js";
 
 type Resolvers = {
   Query: QueryResolvers;
@@ -33,41 +29,27 @@ type Resolvers = {
 const resolvers: WithIndex<IResolvers & Resolvers> = {
   Query: {
     async posts(parent, args, context) {
-      // first is the number of edges that the consumer requested
-      // after is the cursor after which we start slicing our edges
-      const { first, after } = args;
+      // This query implements the GraphQL Cursor Connections:
+      // https://relay.dev/graphql/connections.htm#sec-Arguments
+
+      // first/last is the number of edges that the consumer requested
+      // after/before is the cursor after/before which we start slicing our edges
+      const { first, after, last, before } = args;
 
       const data = await context.db.collection<Post>("posts").find().toArray();
+
       const latestFirstData = data.sort(
         (a, b) => Date.parse(b.date) - Date.parse(a.date)
       );
 
-      const allEdges = transformDataToEdges(latestFirstData, "_id");
-
-      const edges = edgesToReturn({
-        allEdges,
-        after,
-        first
+      return transformDataToConnection({
+        data: latestFirstData,
+        cursorField: "_id",
+        first,
+        last,
+        before,
+        after
       });
-
-      const hasNextPage = isHasNextPage({
-        allEdges,
-        after,
-        first
-      });
-
-      // The cursor of the last element in edges.
-      // API consumers can then use this cursor
-      // to request number of elements after this element
-      const endCursor = edges.at(-1)?.cursor;
-
-      return {
-        edges,
-        pageInfo: {
-          endCursor,
-          hasNextPage
-        }
-      } as PostsResponse;
     },
     async getPostById(parent, args, context) {
       const { _id } = args;
